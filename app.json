@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "events",
-    "slug": "events",
+    "name": "myevents",
+    "slug": "myevents",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
