@@ -39,7 +39,7 @@ function RootLayoutNav() {
     <>
       <NativeBaseProvider>
         <Stack>
-          <Stack.Screen name="welcome" />
+          <Stack.Screen name="welcome" options={{ headerShown: false }} />
           <Stack.Screen name="modal" options={{ presentation: "modal" }} />
         </Stack>
       </NativeBaseProvider>
