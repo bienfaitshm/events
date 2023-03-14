@@ -29,18 +29,12 @@ export default function OrganisatorScreen() {
             </VStack>
             <VStack mt="10" space={10}>
                 <VStack space={3}>
-                    <Button h="16" rounded="full" onPress={handlerSubmit}>
-                        Connexion
-                    </Button>
+                    <Button onPress={handlerSubmit}>Connexion</Button>
                     <Box alignItems="flex-end">
                         <Text>Pas encore de compte ?</Text>
                     </Box>
                 </VStack>
-                <Button
-                    h="16"
-                    rounded="full"
-                    onPress={() => route.push("controler")}
-                >
+                <Button onPress={() => route.push("controler")}>
                     Controleur
                 </Button>
             </VStack>

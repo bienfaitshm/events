@@ -16,8 +16,7 @@ export default function Welcome() {
                 </VStack>
                 <Box mt="16" w="72">
                     <Button
-                        h="16"
-                        rounded="full"
+                        fontSize="xl"
                         onPress={() => route.push("/mode_connexion")}
                     >
                         Commencer
