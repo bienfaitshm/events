@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { useColorScheme } from "react-native";
 import ThemeProvider from "../providers/ThemeProvider";
 import AuthenticationProvider from "./providers/AuthenticationProvider";
+import ApiClientProvider from "./providers/ApiClientProvider";
 
 export const unstable_settings = {
     initialRouteName: "welcome",
@@ -34,14 +35,16 @@ function RootLayoutNav() {
     return (
         <>
             <ThemeProvider>
-                <AuthenticationProvider>
-                    <Stack>
-                        <Stack.Screen
-                            name="welcome"
-                            options={{ title: "welcome" }}
-                        />
-                    </Stack>
-                </AuthenticationProvider>
+                <ApiClientProvider>
+                    <AuthenticationProvider>
+                        <Stack>
+                            <Stack.Screen
+                                name="welcome"
+                                options={{ title: "welcome" }}
+                            />
+                        </Stack>
+                    </AuthenticationProvider>
+                </ApiClientProvider>
             </ThemeProvider>
         </>
     );

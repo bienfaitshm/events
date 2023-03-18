@@ -1,6 +1,6 @@
 import { useRouter, Stack } from "expo-router";
 import { Box, Text, Button, VStack, Heading } from "native-base";
-import { CopyrightFooter } from "../../components/CopyrightFooter";
+import { CopyrightFooter } from "../components/CopyrightFooter";
 import BGimage from "../containers/BGImage";
 // import FG_IMG from "../assets/fonts/SpaceMono-Regular.ttf";
 

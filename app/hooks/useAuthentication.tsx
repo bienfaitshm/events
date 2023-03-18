@@ -1,5 +1,5 @@
 export default function useAuthentication() {
     return {
-        isAuthenticated: false,
+        isAuthenticated: true,
     };
 }

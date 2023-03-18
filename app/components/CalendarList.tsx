@@ -1,3 +1,4 @@
+import React from "react";
 import {
     Box,
     SectionList,
@@ -11,7 +12,9 @@ import {
     Button,
 } from "native-base";
 import Entypo from "@expo/vector-icons/Entypo";
-import ItemEvent from "../components/ItemEvent";
+import ItemEvent from "./ItemEvent";
+import { titledEvents } from "../utils/parserEvent";
+import { TitleEventsTypeResponce } from "../services/apis";
 
 const DateNamePicker: React.FC = () => {
     return (
@@ -33,7 +36,30 @@ const DateNamePicker: React.FC = () => {
     );
 };
 
-export default function CalendarList() {
+const Loading: React.FC<{ text?: string }> = ({ text = "Loaging...." }) => {
+    return (
+        <Box flex={1} justifyContent="center" alignItems="center">
+            <Text>{text}</Text>
+        </Box>
+    );
+};
+
+type CalendarListProps = {
+    data: TitleEventsTypeResponce;
+    isLoading: boolean;
+    error: any;
+};
+export default function CalendarList({
+    data,
+    error,
+    isLoading,
+}: CalendarListProps) {
+    if (isLoading) {
+        return <Loading />;
+    }
+
+    const _data = titledEvents(data);
+    console.log("Data..........", _data);
     return (
         <Box>
             <Box zIndex={4} position="absolute" right="1" bottom="7">
@@ -46,7 +72,7 @@ export default function CalendarList() {
                 </Button>
             </Box>
             <SectionList
-                sections={data}
+                sections={_data}
                 ListHeaderComponent={
                     <VStack mx="4" my="3" space={5}>
                         <HStack
@@ -74,7 +100,13 @@ export default function CalendarList() {
                     </VStack>
                 }
                 keyExtractor={(_, i) => i.toString()}
-                renderItem={() => <ItemEvent />}
+                renderItem={({ item }) => (
+                    <ItemEvent
+                        day={item.day}
+                        mounthName={item.mounth}
+                        events={item.events}
+                    />
+                )}
                 renderSectionHeader={({ section }) => (
                     <Heading pl="4" mt="2" color="coolGray.400">
                         {section.title}
