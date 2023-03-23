@@ -8,3 +8,14 @@ export function useLoadEvent() {
 export function useLoadTitleEvent() {
     return useQuery("loadTitleEvent", apis.getTitledEvents);
 }
+
+export function useLoadCategories() {
+    return useQuery("loadCategories", apis.getCategories);
+}
+
+export function useFetchDateEvents(date: string) {
+    return useQuery({
+        queryKey: ["dateEvent", date],
+        queryFn: () => apis.getDateEvents(date),
+    });
+}

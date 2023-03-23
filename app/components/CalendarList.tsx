@@ -12,6 +12,7 @@ import {
     Button,
 } from "native-base";
 import Entypo from "@expo/vector-icons/Entypo";
+import { useRouter } from "expo-router";
 import ItemEvent from "./ItemEvent";
 import { titledEvents } from "../utils/parserEvent";
 import { TitleEventsTypeResponce } from "../services/apis";
@@ -54,16 +55,19 @@ export default function CalendarList({
     error,
     isLoading,
 }: CalendarListProps) {
+    const navigation = useRouter();
     if (isLoading) {
         return <Loading />;
     }
 
     const _data = titledEvents(data);
-    console.log("Data..........", _data);
     return (
         <Box>
             <Box zIndex={4} position="absolute" right="1" bottom="7">
                 <Button
+                    rounded="full"
+                    size="lg"
+                    onPress={() => navigation.push("/category/")}
                     leftIcon={
                         <Icon color="black" as={Entypo} name="calendar" />
                     }
@@ -89,11 +93,9 @@ export default function CalendarList({
                                 AJ
                             </Avatar>
                             <HStack space={3}>
-                                <Text fontSize="lg">TimeLine</Text>
                                 <Text bold fontSize="lg">
                                     Event
                                 </Text>
-                                <Text fontSize="lg">List Invite</Text>
                             </HStack>
                         </HStack>
                         <DateNamePicker />
@@ -102,6 +104,9 @@ export default function CalendarList({
                 keyExtractor={(_, i) => i.toString()}
                 renderItem={({ item }) => (
                     <ItemEvent
+                        onPress={() =>
+                            navigation.push(`(main)/${item.date}/days`)
+                        }
                         day={item.day}
                         mounthName={item.mounth}
                         events={item.events}
@@ -116,24 +121,3 @@ export default function CalendarList({
         </Box>
     );
 }
-
-const data = [
-    {
-        title: "Janvier",
-        data: ["cyan.100"],
-    },
-    {
-        title: "Mars",
-        data: ["yellow.100", "yellow.200"],
-    },
-    {
-        title: "Decembre",
-        data: [
-            "violet.100",
-            "violet.200",
-            "violet.300",
-            "violet.400",
-            "violet.500",
-        ],
-    },
-];

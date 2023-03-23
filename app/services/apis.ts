@@ -1,6 +1,7 @@
-import axios, { AxiosInstance } from "axios";
+import axios, { AxiosInstance, AxiosResponse } from "axios";
 
-const URLNAME = "http://127.0.0.1:8000";
+// const URLNAME = "http://127.0.0.1:8000";
+const URLNAME = "http://192.168.43.72:8000";
 
 const axiosInstance = axios.create({
     baseURL: URLNAME,
@@ -31,6 +32,7 @@ export type EventTypeResponce = {
 };
 
 export type ItemEventType<EVENT> = {
+    date: string;
     mounth: string;
     day: string;
     events: EVENT[];
@@ -46,7 +48,7 @@ export type TitleEventsTypeResponce = PaginateReponce<
 >;
 
 export type CategoryType = {
-    id: 1;
+    id: _ID;
     created_at: DateType;
     name: string;
     text_color: string;
@@ -59,15 +61,33 @@ export class ApisDefinition {
         this.apis = apis;
     }
 
-    createClient = () => {};
+    getDataResponce = <T, D>(request: Promise<AxiosResponse<T, D>>) => {
+        return request.then((res) => res.data);
+    };
+
+    createGuest = () => {};
 
     createEvent = () => {};
     getEvents = () => {
-        return this.apis.get("/api/event/").then((res) => res.data);
+        return this.getDataResponce(this.apis.get("/api/event/"));
     };
 
     getTitledEvents = () => {
-        return this.apis.get("/api/event/titled/").then((res) => res.data);
+        return this.getDataResponce(this.apis.get("/api/event/titled/"));
+    };
+
+    getDateEvents = (date: string) => {
+        return this.getDataResponce<PaginateReponce<EventTypeResponce>, any>(
+            this.apis.get(`api/event/date/${date}/`)
+        );
+    };
+
+    getGuests = () => {};
+
+    getCategories = () => {
+        return this.getDataResponce<PaginateReponce<CategoryType>, any>(
+            this.apis.get("api/category/")
+        );
     };
 
     sendInvitation = () => {};

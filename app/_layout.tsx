@@ -8,7 +8,7 @@ import AuthenticationProvider from "./providers/AuthenticationProvider";
 import ApiClientProvider from "./providers/ApiClientProvider";
 
 export const unstable_settings = {
-    initialRouteName: "welcome",
+    initialRouteName: "(auth)/index",
 };
 
 export default function _Layout() {
@@ -37,10 +37,21 @@ function RootLayoutNav() {
             <ThemeProvider>
                 <ApiClientProvider>
                     <AuthenticationProvider>
-                        <Stack>
+                        <Stack
+                            screenOptions={{
+                                animation: "slide_from_left",
+                                contentStyle: {
+                                    backgroundColor: "white",
+                                },
+                            }}
+                        >
                             <Stack.Screen
-                                name="welcome"
+                                name="(auth)/welcome"
                                 options={{ title: "welcome" }}
+                            />
+                            <Stack.Screen
+                                name="daysevent"
+                                options={{ title: "Da" }}
                             />
                         </Stack>
                     </AuthenticationProvider>
