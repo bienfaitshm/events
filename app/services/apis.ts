@@ -73,7 +73,10 @@ export class ApisDefinition {
     };
 
     getTitledEvents = () => {
-        return this.getDataResponce(this.apis.get("/api/event/titled/"));
+        return this.getDataResponce<
+            PaginateReponce<TitleEventsType<ItemEventType<EventTypeResponce>>>,
+            any
+        >(this.apis.get("/api/event/titled/"));
     };
 
     getDateEvents = (date: string) => {

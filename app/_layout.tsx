@@ -39,18 +39,27 @@ function RootLayoutNav() {
                     <AuthenticationProvider>
                         <Stack
                             screenOptions={{
-                                animation: "slide_from_left",
                                 contentStyle: {
                                     backgroundColor: "white",
                                 },
                             }}
                         >
                             <Stack.Screen
-                                name="(auth)/welcome"
+                                name="(main)/index"
+                                options={{
+                                    title: "Event",
+                                }}
+                            />
+                            <Stack.Screen
+                                name="(auth)/welcome/op"
                                 options={{ title: "welcome" }}
                             />
                             <Stack.Screen
-                                name="daysevent"
+                                name="(creator)/[id]/createEvent"
+                                options={{ title: "Creation de l'invitation" }}
+                            />
+                            <Stack.Screen
+                                name="(main)/[event]/days"
                                 options={{ title: "Da" }}
                             />
                         </Stack>

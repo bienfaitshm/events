@@ -5,7 +5,7 @@ export function useLoadEvent() {
     return useQuery("loadEvent", apis.getEvents);
 }
 
-export function useLoadTitleEvent() {
+export function useFetchTitleEvent() {
     return useQuery("loadTitleEvent", apis.getTitledEvents);
 }
 

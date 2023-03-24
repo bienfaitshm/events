@@ -1,9 +1,8 @@
 import React from "react";
-import { View, Heading, VStack, Text } from "native-base";
 import { useLocalSearchParams } from "expo-router";
 import DaysEventList from "../../components/DayEvents";
-import { Stack } from "expo-router";
 import { useFetchDateEvents } from "../../hooks/apis";
+import SuspenseQueryFetch from "../../containers/SuspenseQueryFetch";
 
 type DayEventsParams = {
     event: string | string[];
@@ -21,9 +20,9 @@ export default function DayEvents(props: DayEventsProps) {
     const { event } = useLocalSearchParams<DayEventsParams>();
     const date = getDateEvent(event);
     return (
-        <View flex={1} m="1">
+        <SuspenseQueryFetch>
             <DaysEventListWithData date={date} />
-        </View>
+        </SuspenseQueryFetch>
     );
 }
 

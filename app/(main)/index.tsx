@@ -1,16 +1,26 @@
-import { View, Text } from "native-base";
-import CalendarList from "../components/CalendarList";
-import CreatorEvents from "../components/CreatorEvent";
-import { useLoadTitleEvent } from "../hooks/apis";
+import { View } from "native-base";
+import { useRouter } from "expo-router";
+import { useFetchTitleEvent } from "../hooks/apis";
+import HomeListEvent from "../components/HomeListEvent";
+import SuspenseQueryFetch from "../containers/SuspenseQueryFetch";
+
+const HomeListEventWithData = () => {
+    const router = useRouter();
+    const { data } = useFetchTitleEvent();
+    return (
+        <HomeListEvent
+            data={data?.results}
+            onSelectItem={(date) => router.push(`(main)/${date}/days`)}
+        />
+    );
+};
 
 export default function HomeScreen() {
-    const { data, isLoading, error } = useLoadTitleEvent();
-    // if (data) {
-    //     console.log("data....", parseEvent(data));
-    // }
     return (
         <View flex={1}>
-            <CalendarList data={data} isLoading={isLoading} error={error} />
+            <SuspenseQueryFetch>
+                <HomeListEventWithData />
+            </SuspenseQueryFetch>
         </View>
     );
 }
