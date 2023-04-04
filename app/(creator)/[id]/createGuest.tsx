@@ -1,16 +1,18 @@
 import React from "react";
-import { Text } from "native-base";
+import Ionicons from "@expo/vector-icons/Ionicons";
 import { Stack } from "expo-router";
-import CreatorEvent from "../../components/CreatorEvent";
+import { View } from "native-base";
 import { useParamsID } from "./creatorUtils";
+import CreatorGuest from "../../components/CreatorGuest";
 
-export default function CreateEventProps() {
+export default function CreateGuestPage() {
     const event = useParamsID();
     return (
         <>
             <Stack.Screen
                 options={{
-                    title: "Ajout Event",
+                    title: "Ajout invite",
+                    headerTransparent: true,
                     headerTintColor: "white",
                     statusBarColor: "black",
                     statusBarStyle: "light",
@@ -19,11 +21,13 @@ export default function CreateEventProps() {
                     },
                 }}
             />
-            <CreatorEvent
-                onSubmit={(values) =>
-                    console.log(JSON.stringify(values, null, 4))
-                }
-            />
+            <View>
+                <CreatorGuest
+                    onSubmit={(values) =>
+                        console.log(JSON.stringify(values, null, 4))
+                    }
+                />
+            </View>
         </>
     );
 }

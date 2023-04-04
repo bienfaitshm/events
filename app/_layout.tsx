@@ -1,6 +1,6 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useFonts } from "expo-font";
-import { SplashScreen, Slot, Stack } from "expo-router";
+import { SplashScreen, Stack } from "expo-router";
 import { useEffect } from "react";
 import { useColorScheme } from "react-native";
 import ThemeProvider from "../providers/ThemeProvider";
@@ -43,26 +43,7 @@ function RootLayoutNav() {
                                     backgroundColor: "white",
                                 },
                             }}
-                        >
-                            <Stack.Screen
-                                name="(main)/index"
-                                options={{
-                                    title: "Event",
-                                }}
-                            />
-                            <Stack.Screen
-                                name="(auth)/welcome/op"
-                                options={{ title: "welcome" }}
-                            />
-                            <Stack.Screen
-                                name="(creator)/[id]/createEvent"
-                                options={{ title: "Creation de l'invitation" }}
-                            />
-                            <Stack.Screen
-                                name="(main)/[event]/days"
-                                options={{ title: "Da" }}
-                            />
-                        </Stack>
+                        ></Stack>
                     </AuthenticationProvider>
                 </ApiClientProvider>
             </ThemeProvider>

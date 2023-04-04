@@ -1,32 +1,37 @@
 import { Box } from "native-base";
 import React from "react";
-import CetegoryChooser from "../components/CategoryChooser";
+import CategoryChooser from "../components/CategoryChooser";
 import { useRouter, Stack } from "expo-router";
-import { useLoadCategories } from "../hooks/apis";
+import { useFetchCategories } from "../hooks/apis";
+import SuspenseQueryFetch from "../containers/SuspenseQueryFetch";
+
+const DCategoryChooser = () => {
+    const navigation = useRouter();
+    const { data } = useFetchCategories();
+    return (
+        <CategoryChooser
+            onPress={(id) => navigation.push(`(creator)/${id}/createEvent`)}
+            data={data?.results.map((d) => ({
+                name: d.name,
+                bgColor: d.bg_color,
+                textColor: d.text_color,
+                id: d.id,
+            }))}
+        />
+    );
+};
 
 export default function CreateEvent() {
-    const navigation = useRouter();
-    const { data } = useLoadCategories();
     return (
         <>
-            <Stack
-                screenOptions={{
+            <Stack.Screen
+                options={{
                     title: "Category",
                 }}
             />
-            <Box>
-                <CetegoryChooser
-                    onPress={(id) =>
-                        navigation.push(`(creator)/${id}/createEvent`)
-                    }
-                    data={data?.results.map((d) => ({
-                        name: d.name,
-                        bgColor: d.bg_color,
-                        textColor: d.text_color,
-                        id: d.id,
-                    }))}
-                />
-            </Box>
+            <SuspenseQueryFetch>
+                <DCategoryChooser />
+            </SuspenseQueryFetch>
         </>
     );
 }

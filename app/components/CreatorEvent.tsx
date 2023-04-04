@@ -1,20 +1,37 @@
 import * as React from "react";
-import DateTimePicker from "@react-native-community/datetimepicker";
+import * as Yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import dayjs from "dayjs";
+
+import Ionicons from "@expo/vector-icons/Ionicons";
 import {
-    Box,
-    Text,
+    DateTimePickerAndroid,
+    DateTimePickerEvent,
+} from "@react-native-community/datetimepicker";
+import {
     VStack,
-    Avatar,
     Input,
     HStack,
     ScrollView,
     Button,
     IInputProps,
+    View,
+    Pressable,
+    Icon,
 } from "native-base";
 
-import { useForm, SubmitHandler, Controller } from "react-hook-form";
+import {
+    useForm,
+    SubmitHandler,
+    Controller,
+    FieldErrors,
+    Control,
+} from "react-hook-form";
+import { InterfaceViewProps } from "native-base/lib/typescript/components/basic/View/types";
 
-type Inputs = {
+import LabelInput, { LabelInputProps } from "./LabelInput";
+
+type DataInputType = {
     name: string;
     description: string;
     start: Date;
@@ -22,180 +39,218 @@ type Inputs = {
     date: Date;
 };
 
-/**
- * Label Input
- * @param props{}
- * @returns ReactNode
- */
-const LabelInput: React.FC<{
-    label: string;
-    children: React.ReactNode;
-    labelColor?: string;
-}> = ({ label, labelColor, children }) => {
-    return (
-        <VStack flex={1}>
-            <Text fontSize="md" color={labelColor}>
-                {label}
-            </Text>
-            {children}
-        </VStack>
-    );
+// date getter process
+const DATE_FORMAT = "DD-MM-YYYY";
+const TIME_FORMAT = "HH:mm";
+
+const getParsedTime = (
+    value: string | Date | undefined,
+    format: string = TIME_FORMAT
+) => {
+    let datejs: dayjs.Dayjs = dayjs(value, format, true);
+    return datejs.isValid() ? datejs : dayjs();
 };
+
+const validationSchema = Yup.object().shape({
+    name: Yup.string().required("Le nom de l'evenement est obligatoire"),
+    date: Yup.string()
+        .required("La date est obligatoire")
+        .matches(
+            /^\d{2}([./-])\d{2}\1\d{4}$/,
+            "La Date est invalide utiliser par ex. 23-03-2023"
+        ),
+    start: Yup.string()
+        .matches(/^\d{2}([:])\d{2}$/, "L'heure n'est pas correcte")
+        .required("Le debut est obligatoire"),
+    end: Yup.string()
+        .matches(/^\d{2}([:])\d{2}$/, "L'heure n'est pas correcte")
+        .required("La fin est obligatoire"),
+    description: Yup.string().required("La description est obligatoire"),
+});
 
 /**
  * Date Time input component
  */
-type DateTimeInputProps = {} & IInputProps;
+type DateTimeInputProps = {
+    mode?: "time" | "date";
+} & IInputProps;
 
-const DateTimeInput: React.FC<DateTimeInputProps> = ({ ...inputProps }) => {
+const DateTimeInput: React.FC<DateTimeInputProps> = ({
+    mode = "time",
+    value,
+    ...inputProps
+}) => {
+    const format = mode == "time" ? TIME_FORMAT : DATE_FORMAT;
+    const onChange = (event: DateTimePickerEvent, date?: Date) => {
+        if (event.type == "set") {
+            const dateStr = getParsedTime(date, format).format(format);
+            inputProps?.onChangeText?.(dateStr);
+        }
+    };
+
+    const handlerOpenDatePicker = () => {
+        DateTimePickerAndroid.open({
+            value: getParsedTime(value, format).toDate(),
+            onChange,
+            mode: mode,
+            is24Hour: true,
+        });
+    };
     return (
         <Input
             flex={1}
             fontSize="md"
             variant="underlined"
-            placeholderTextColor="white"
-            color="white"
+            InputRightElement={
+                <Pressable onPress={handlerOpenDatePicker}>
+                    <Icon
+                        as={Ionicons}
+                        name={mode == "date" ? "calendar" : "time"}
+                    />
+                </Pressable>
+            }
+            value={value}
             {...inputProps}
         />
     );
 };
 
-const CreatorEvents = () => {
+type ControledInputProps<
+    D extends {},
+    P = IInputProps | DateTimeInputProps
+> = Omit<LabelInputProps, "children"> & {
+    viewProps?: InterfaceViewProps;
+    control?: Control<D, any>;
+    errors?: FieldErrors<D>;
+    name: keyof D;
+    inputProps?: P;
+    Children?: React.FC<P>;
+};
+
+const ControledInput: React.FC<ControledInputProps<DataInputType>> = ({
+    viewProps,
+    control,
+    errors,
+    name,
+    inputProps,
+    Children = Input,
+    ...props
+}) => {
+    return (
+        <View my="3" flex={1} {...viewProps}>
+            <Controller
+                control={control}
+                render={({ field: { onChange, onBlur, value } }) => (
+                    <LabelInput
+                        errorMessage={errors?.[name]?.message}
+                        isInvalid={Boolean(errors?.[name])}
+                        {...props}
+                    >
+                        <Children
+                            fontSize="md"
+                            variant="underlined"
+                            placeholderTextColor="white"
+                            color="white"
+                            onBlur={onBlur}
+                            onChangeText={onChange}
+                            value={value as string}
+                            {...inputProps}
+                        />
+                    </LabelInput>
+                )}
+                name={name}
+            />
+        </View>
+    );
+};
+
+type CreatorEventsProps<D> = {
+    initialValue?: Partial<D>;
+    onSubmit?: (value: DataInputType) => void;
+};
+
+const CreatorEvents: React.FC<CreatorEventsProps<DataInputType>> = ({
+    initialValue,
+    onSubmit,
+}) => {
     const {
         control,
         handleSubmit,
-        watch,
         formState: { errors },
-    } = useForm<Inputs>();
-    const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
+    } = useForm<DataInputType>({
+        defaultValues: initialValue,
+        resolver: yupResolver(validationSchema),
+    });
+
+    const handlerSubmit: SubmitHandler<DataInputType> = (data) =>
+        onSubmit?.(data);
+
+    React.useEffect(() => {
+        const customParseFormat = require("dayjs/plugin/customParseFormat");
+        dayjs.extend(customParseFormat);
+    }, []);
 
     return (
         <ScrollView>
             <VStack p="4" pb="10" bg="black" space={10}>
                 <VStack space={4}>
-                    <Avatar
-                        bg="green.500"
-                        size="lg"
-                        source={{
-                            uri: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
+                    <ControledInput
+                        label="Nom Event"
+                        name="name"
+                        errors={errors}
+                        control={control}
+                        labelProps={{ color: "white" }}
+                        inputProps={{
+                            placeholderTextColor: "white",
+                            color: "white",
                         }}
-                    >
-                        AJ
-                    </Avatar>
-                    <Text color="white" fontSize="2xl">
-                        Creation Event
-                    </Text>
-                </VStack>
-                <VStack space={4}>
-                    <LabelInput label="Nom Event" labelColor="white">
-                        <Controller
-                            control={control}
-                            rules={{
-                                required: true,
-                            }}
-                            render={({
-                                field: { onChange, onBlur, value },
-                            }) => (
-                                <Input
-                                    fontSize="md"
-                                    variant="underlined"
-                                    placeholderTextColor="white"
-                                    color="white"
-                                    onBlur={onBlur}
-                                    onChangeText={onChange}
-                                    value={value}
-                                />
-                            )}
-                            name="name"
-                        />
-                    </LabelInput>
-                    <LabelInput label="Date" labelColor="white">
-                        <Controller
-                            control={control}
-                            rules={{
-                                required: true,
-                            }}
-                            render={({
-                                field: { onChange, onBlur, value },
-                            }) => (
-                                <Input
-                                    fontSize="md"
-                                    variant="underlined"
-                                    placeholderTextColor="white"
-                                    color="white"
-                                    onBlur={onBlur}
-                                    onChangeText={onChange}
-                                    value={value}
-                                />
-                            )}
-                            name="name"
-                        />
-                    </LabelInput>
-
+                    />
+                    <ControledInput
+                        label="Date"
+                        name="date"
+                        control={control}
+                        errors={errors}
+                        Children={DateTimeInput}
+                        inputProps={{ mode: "date" }}
+                    />
                     <HStack space={10}>
-                        <LabelInput label="Debut" labelColor="white">
-                            <Controller
-                                control={control}
-                                rules={{
-                                    required: true,
-                                }}
-                                render={({
-                                    field: { onChange, onBlur, value },
-                                }) => (
-                                    <DateTimeInput
-                                        onBlur={onBlur}
-                                        onChangeText={onChange}
-                                        value={value}
-                                    />
-                                )}
-                                name="name"
-                            />
-                        </LabelInput>
-                        <LabelInput label="Fin" labelColor="white">
-                            <Controller
-                                control={control}
-                                rules={{
-                                    required: true,
-                                }}
-                                render={({
-                                    field: { onChange, onBlur, value },
-                                }) => (
-                                    <DateTimeInput
-                                        onBlur={onBlur}
-                                        onChangeText={onChange}
-                                        value={value}
-                                    />
-                                )}
-                                name="name"
-                            />
-                        </LabelInput>
+                        <ControledInput
+                            label="Debut"
+                            name="start"
+                            control={control}
+                            errors={errors}
+                            Children={DateTimeInput}
+                            inputProps={{ flex: 1, w: "full" }}
+                        />
+                        <ControledInput
+                            label="Fin"
+                            name="end"
+                            control={control}
+                            errors={errors}
+                            Children={DateTimeInput}
+                            inputProps={{ flex: 1 }}
+                        />
                     </HStack>
                 </VStack>
             </VStack>
             <VStack p="4" space={8}>
-                <LabelInput label="Description">
-                    <Controller
-                        control={control}
-                        rules={{
-                            required: true,
-                        }}
-                        render={({ field: { onChange, onBlur, value } }) => (
-                            <Input
-                                fontSize="md"
-                                variant="underlined"
-                                multiline
-                                onBlur={onBlur}
-                                onChangeText={onChange}
-                                value={value}
-                            />
-                        )}
-                        name="description"
-                    />
-                </LabelInput>
+                <ControledInput
+                    label="Description"
+                    name="description"
+                    errors={errors}
+                    control={control}
+                    labelProps={{ color: "white" }}
+                    inputProps={{
+                        placeholderTextColor: "gray.800",
+                        color: "gray.800",
+                    }}
+                />
                 <Button
+                    rounded="full"
+                    size="lg"
                     colorScheme="black"
                     bgColor="black"
-                    onPress={handleSubmit(onSubmit)}
+                    onPress={handleSubmit(handlerSubmit)}
                 >
                     Enregistrer
                 </Button>
