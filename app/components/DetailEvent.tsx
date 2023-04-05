@@ -8,6 +8,7 @@ type DetalEventProps = {
     description: string;
     category: string;
     guestNumber: number;
+    codeEvent: string | null;
 };
 
 const InfoItem: React.FC<{
@@ -41,6 +42,7 @@ const DetailEvent: React.FC<DetalEventProps> = ({
     bgColor,
     textColor,
     guestNumber,
+    codeEvent,
 }) => {
     return (
         <View>
@@ -63,13 +65,15 @@ const DetailEvent: React.FC<DetalEventProps> = ({
                         <InfoItem
                             color={textColor}
                             title="Invites"
-                            value={String(guestNumber)}
+                            value={guestNumber.toString()}
                         />
-                        <InfoItem
-                            color={textColor}
-                            title="Code Invitation"
-                            value={"123hu0"}
-                        />
+                        {codeEvent && (
+                            <InfoItem
+                                color={textColor}
+                                title="Code Invitation"
+                                value={codeEvent}
+                            />
+                        )}
                     </HStack>
                 </VStack>
                 <VStack space="2">

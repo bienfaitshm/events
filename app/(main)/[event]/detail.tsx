@@ -28,6 +28,7 @@ const DDetailEvent: React.FC<{ event: _ID; nGuests: number }> = ({
             description={eventData.description}
             textColor={eventData.text_color}
             guestNumber={nGuests}
+            codeEvent = {eventData.code}
         />
     ) : (
         <React.Fragment></React.Fragment>

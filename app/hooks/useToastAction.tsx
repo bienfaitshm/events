@@ -43,7 +43,7 @@ const ToastAlert: React.FC<{
                         fontSize="md"
                         fontWeight="medium"
                         flexShrink={1}
-                        color="red.500"
+                        color="lightText"
                     >
                         {title}
                     </Text>
@@ -83,6 +83,7 @@ export const useToastAction = () => {
         toastSuccess: () => {
             toast.show({
                 duration: 10000,
+                placement: "top",
                 render: ({ id }) => (
                     <ToastAlert
                         id={id}

@@ -49,6 +49,7 @@ export type EventTypeResponce = EventMixinType<{
     category_name: string;
     text_color: string;
     bg_color: string;
+    code:string| null;
     created_at: DateType;
 }>;
 
