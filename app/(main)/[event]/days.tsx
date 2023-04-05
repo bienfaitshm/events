@@ -1,9 +1,9 @@
 import React from "react";
 import { Stack } from "expo-router";
 
-import DaysEventList from "../../components/DayEvents";
-import SuspenseQueryFetch from "../../containers/SuspenseQueryFetch";
-import { useFetchDateEvents } from "../../hooks/apis";
+import DaysEventList from "../../../components/DayEvents";
+import SuspenseQueryFetch from "../../../containers/SuspenseQueryFetch";
+import { useFetchDateEvents } from "../../../hooks/apis";
 import { useParamsEvent } from "./utilsEvent";
 
 const DaysEventListWithData: React.FC<{ date: string }> = ({ date }) => {

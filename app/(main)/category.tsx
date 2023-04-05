@@ -1,9 +1,9 @@
 import { Box } from "native-base";
 import React from "react";
-import CategoryChooser from "../components/CategoryChooser";
+import CategoryChooser from "../../components/CategoryChooser";
 import { useRouter, Stack } from "expo-router";
-import { useFetchCategories } from "../hooks/apis";
-import SuspenseQueryFetch from "../containers/SuspenseQueryFetch";
+import { useFetchCategories } from "../../hooks/apis";
+import SuspenseQueryFetch from "../../containers/SuspenseQueryFetch";
 
 const DCategoryChooser = () => {
     const navigation = useRouter();

@@ -14,7 +14,7 @@ import {
 import Entypo from "@expo/vector-icons/Entypo";
 import { useRouter } from "expo-router";
 import ItemEvent from "./ItemEvent";
-import { titledEvents } from "../utils/parserEvent";
+import { titledEvents } from "../../utils/parserEvent";
 import { TitleEventsTypeResponce } from "../services/apis";
 
 const DateNamePicker: React.FC = () => {

@@ -8,7 +8,7 @@ import {
     useBlurOnFulfill,
     useClearByFocusCell,
 } from "react-native-confirmation-code-field";
-import BGimage from "../containers/BGImage";
+import BGimage from "../../containers/BGImage";
 
 const CELL_COUNT = 5;
 

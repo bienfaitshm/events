@@ -2,7 +2,7 @@ import React from "react";
 import { FlatList, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
 import { View, Heading, VStack, Text, HStack } from "native-base";
-import { keyExtractor } from "../utils/func";
+import { keyExtractor } from "../../utils/func";
 import dayjs from "dayjs";
 
 var calendar = require("dayjs/plugin/calendar");

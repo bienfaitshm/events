@@ -2,10 +2,9 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
 import { useEffect } from "react";
-import { useColorScheme } from "react-native";
 import ThemeProvider from "../providers/ThemeProvider";
-import AuthenticationProvider from "./providers/AuthenticationProvider";
-import ApiClientProvider from "./providers/ApiClientProvider";
+import AuthenticationProvider from "../providers/AuthenticationProvider";
+import ApiClientProvider from "../providers/ApiClientProvider";
 
 export const unstable_settings = {
     initialRouteName: "(auth)/index",
@@ -31,7 +30,7 @@ export default function _Layout() {
     );
 }
 
-function RootLayoutNav() {
+export function RootLayoutNav() {
     return (
         <>
             <ThemeProvider>

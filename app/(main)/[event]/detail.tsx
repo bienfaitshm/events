@@ -1,16 +1,16 @@
 import React from "react";
 import { ToastAndroid } from "react-native";
 import { Stack, useRouter } from "expo-router";
-import SuspenseQueryFetch from "../../containers/SuspenseQueryFetch";
+import SuspenseQueryFetch from "../../../containers/SuspenseQueryFetch";
 
-import DetailEvent from "../../components/DetailEvent";
-import GuestList, { OnSendInvitationType } from "../../components/GuestList";
+import DetailEvent from "../../../components/DetailEvent";
+import GuestList, { OnSendInvitationType } from "../../../components/GuestList";
 
 import {
     useFetchEvent,
     useFetchEventGuests,
     useSendInvationGuest,
-} from "../../hooks/apis";
+} from "../../../hooks/apis";
 import { _ID, useParamsEvent } from "./utilsEvent";
 import { Button } from "native-base";
 
@@ -28,7 +28,7 @@ const DDetailEvent: React.FC<{ event: _ID; nGuests: number }> = ({
             description={eventData.description}
             textColor={eventData.text_color}
             guestNumber={nGuests}
-            codeEvent = {eventData.code}
+            codeEvent={eventData.code}
         />
     ) : (
         <React.Fragment></React.Fragment>

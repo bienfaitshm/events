@@ -1,9 +1,9 @@
 import React from "react";
 import { Stack, useRouter } from "expo-router";
 import { useParamsID } from "./creatorUtils";
-import CreatorGuest, { DataInputType } from "../../components/CreatorGuest";
-import { usePostGuest } from "../../hooks/apis";
-import { useToastAction } from "../../hooks/useToastAction";
+import CreatorGuest, { DataInputType } from "../../../components/CreatorGuest";
+import { usePostGuest } from "../../../hooks/apis";
+import { useToastAction } from "../../../hooks/useToastAction";
 
 const usePostAction = (event: string | number) => {
     const router = useRouter();

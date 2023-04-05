@@ -1,7 +1,7 @@
 import { Box, Heading, VStack, Button } from "native-base";
 import { Link, useRouter } from "expo-router";
-import BGimage from "../containers/BGImage";
-import { CopyrightFooter } from "../components/CopyrightFooter";
+import BGimage from "../../containers/BGImage";
+import { CopyrightFooter } from "../../components/CopyrightFooter";
 
 export default function WelecomeScreen() {
     const route = useRouter();

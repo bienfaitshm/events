@@ -1,7 +1,7 @@
 import { useRouter, Stack } from "expo-router";
-import { useFetchTitleEvent } from "../hooks/apis";
-import HomeListEvent from "../components/HomeListEvent";
-import SuspenseQueryFetch from "../containers/SuspenseQueryFetch";
+import { useFetchTitleEvent } from "../../hooks/apis";
+import HomeListEvent from "../../components/HomeListEvent";
+import SuspenseQueryFetch from "../../containers/SuspenseQueryFetch";
 import { Avatar, Button, Icon, Image, View } from "native-base";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
