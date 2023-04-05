@@ -30,25 +30,40 @@ import {
 import { InterfaceViewProps } from "native-base/lib/typescript/components/basic/View/types";
 
 import LabelInput, { LabelInputProps } from "./LabelInput";
+import ButtonCreation, { CallBackType } from "./ButtonCreation";
 
-type DataInputType = {
+const customParseFormat = require("dayjs/plugin/customParseFormat");
+dayjs.extend(customParseFormat);
+
+export type DataInputType = {
     name: string;
     description: string;
-    start: Date;
-    end: Date;
-    date: Date;
+    start: Date | string;
+    end: Date | string;
+    date: Date | string;
 };
 
 // date getter process
 const DATE_FORMAT = "DD-MM-YYYY";
+const DATE_FORMAT_ISO = "YYYY-MM-DD";
 const TIME_FORMAT = "HH:mm";
 
 const getParsedTime = (
     value: string | Date | undefined,
     format: string = TIME_FORMAT
 ) => {
-    let datejs: dayjs.Dayjs = dayjs(value, format, true);
+    const datejs: dayjs.Dayjs =
+        typeof value === "string" ? dayjs(value, format, true) : dayjs(value);
     return datejs.isValid() ? datejs : dayjs();
+};
+
+const getIsoFormatDateTime = (
+    datetime?: Date | string,
+    type: "TIME" | "DATE" = "TIME"
+) => {
+    return getParsedTime(datetime).format(
+        type === "TIME" ? TIME_FORMAT : DATE_FORMAT_ISO
+    );
 };
 
 const validationSchema = Yup.object().shape({
@@ -83,7 +98,7 @@ const DateTimeInput: React.FC<DateTimeInputProps> = ({
     const format = mode == "time" ? TIME_FORMAT : DATE_FORMAT;
     const onChange = (event: DateTimePickerEvent, date?: Date) => {
         if (event.type == "set") {
-            const dateStr = getParsedTime(date, format).format(format);
+            const dateStr = dayjs(date).format(format);
             inputProps?.onChangeText?.(dateStr);
         }
     };
@@ -166,7 +181,7 @@ const ControledInput: React.FC<ControledInputProps<DataInputType>> = ({
 
 type CreatorEventsProps<D> = {
     initialValue?: Partial<D>;
-    onSubmit?: (value: DataInputType) => void;
+    onSubmit?: (value: DataInputType, callback?: CallBackType) => void;
 };
 
 const CreatorEvents: React.FC<CreatorEventsProps<DataInputType>> = ({
@@ -182,13 +197,18 @@ const CreatorEvents: React.FC<CreatorEventsProps<DataInputType>> = ({
         resolver: yupResolver(validationSchema),
     });
 
-    const handlerSubmit: SubmitHandler<DataInputType> = (data) =>
-        onSubmit?.(data);
-
-    React.useEffect(() => {
-        const customParseFormat = require("dayjs/plugin/customParseFormat");
-        dayjs.extend(customParseFormat);
-    }, []);
+    const handlerSubmit = (callback?: CallBackType) => {
+        handleSubmit((data) => {
+            callback?.(true);
+            onSubmit?.(
+                {
+                    ...data,
+                    date: getIsoFormatDateTime(data.date, "DATE"),
+                },
+                callback
+            );
+        })();
+    };
 
     return (
         <ScrollView>
@@ -245,15 +265,7 @@ const CreatorEvents: React.FC<CreatorEventsProps<DataInputType>> = ({
                         color: "gray.800",
                     }}
                 />
-                <Button
-                    rounded="full"
-                    size="lg"
-                    colorScheme="black"
-                    bgColor="black"
-                    onPress={handleSubmit(handlerSubmit)}
-                >
-                    Enregistrer
-                </Button>
+                <ButtonCreation onPress={handlerSubmit} />
             </VStack>
         </ScrollView>
     );

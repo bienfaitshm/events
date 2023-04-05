@@ -1,12 +1,43 @@
 import React from "react";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import { Stack } from "expo-router";
-import { View } from "native-base";
+import { Stack, useRouter } from "expo-router";
 import { useParamsID } from "./creatorUtils";
-import CreatorGuest from "../../components/CreatorGuest";
+import CreatorGuest, { DataInputType } from "../../components/CreatorGuest";
+import { usePostGuest } from "../../hooks/apis";
+import { useToastAction } from "../../hooks/useToastAction";
+
+const usePostAction = (event: string | number) => {
+    const router = useRouter();
+    const mutation = usePostGuest();
+    const toast = useToastAction();
+    return (value: DataInputType, callback: (state: boolean) => void) => {
+        mutation.mutate(
+            {
+                first_name: value.firstName,
+                second_name: value.firstName,
+                is_couple: value.isCouple || false,
+                email: value.email,
+                phone: value.place,
+                place: value.place,
+                event,
+            },
+            {
+                onError(error) {
+                    callback?.(false);
+                    toast.toastError(JSON.stringify(error, null, 4));
+                },
+                onSuccess() {
+                    callback?.(false);
+                    toast.toastSuccess();
+                    router.back();
+                },
+            }
+        );
+    };
+};
 
 export default function CreateGuestPage() {
     const event = useParamsID();
+    const handlerSubmit = usePostAction(event);
     return (
         <>
             <Stack.Screen
@@ -21,13 +52,7 @@ export default function CreateGuestPage() {
                     },
                 }}
             />
-            <View>
-                <CreatorGuest
-                    onSubmit={(values) =>
-                        console.log(JSON.stringify(values, null, 4))
-                    }
-                />
-            </View>
+            <CreatorGuest onSubmit={handlerSubmit} />
         </>
     );
 }

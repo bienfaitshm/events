@@ -1,11 +1,38 @@
 import React from "react";
-import { Text } from "native-base";
-import { Stack } from "expo-router";
-import CreatorEvent from "../../components/CreatorEvent";
+import { Stack, useRouter } from "expo-router";
+import CreatorEvent, { DataInputType } from "../../components/CreatorEvent";
 import { useParamsID } from "./creatorUtils";
+import { usePostEvent } from "../../hooks/apis";
+import { useToastAction } from "../../hooks/useToastAction";
+
+const usePostAction = (category: string | number) => {
+    const router = useRouter();
+    const toast = useToastAction();
+    const mutation = usePostEvent();
+    return (value: DataInputType, callback?: (state: boolean) => void) => {
+        mutation.mutate(
+            {
+                category,
+                ...value,
+            },
+            {
+                onError(error) {
+                    callback?.(false);
+                    toast.toastError(JSON.stringify(error, null, 4));
+                },
+                onSuccess() {
+                    callback?.(false);
+                    toast.toastSuccess();
+                    router.back();
+                },
+            }
+        );
+    };
+};
 
 export default function CreateEventProps() {
-    const event = useParamsID();
+    const category = useParamsID();
+    const handlerSubmit = usePostAction(category);
     return (
         <>
             <Stack.Screen
@@ -19,11 +46,7 @@ export default function CreateEventProps() {
                     },
                 }}
             />
-            <CreatorEvent
-                onSubmit={(values) =>
-                    console.log(JSON.stringify(values, null, 4))
-                }
-            />
+            <CreatorEvent onSubmit={handlerSubmit} />
         </>
     );
 }

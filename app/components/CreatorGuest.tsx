@@ -22,8 +22,9 @@ import { yupResolver } from "@hookform/resolvers/yup";
 
 import LabelInput, { LabelInputProps } from "./LabelInput";
 import { InterfaceViewProps } from "native-base/lib/typescript/components/basic/View/types";
+import ButtonCreation, { CallBackType } from "./ButtonCreation";
 
-type DataInputType = {
+export type DataInputType = {
     firstName: string;
     secondName: string;
     isCouple?: boolean;
@@ -34,7 +35,7 @@ type DataInputType = {
 
 type CreatorGuestProps = {
     initialValue?: Partial<DataInputType>;
-    onSubmit?(e: DataInputType): void;
+    onSubmit?(e: DataInputType, clb?: CallBackType): void;
 };
 
 const validationSchema = Yup.object().shape({
@@ -103,8 +104,12 @@ const CreatorGuest: React.FC<CreatorGuestProps> = ({
         resolver: yupResolver(validationSchema),
     });
 
-    const handlerSubmit: SubmitHandler<DataInputType> = (data) =>
-        onSubmit?.(data);
+    const handlerSubmit = (callback?: CallBackType) => {
+        handleSubmit((data) => {
+            callback?.(true);
+            onSubmit?.(data, callback);
+        })();
+    };
 
     return (
         <ScrollView>
@@ -214,7 +219,8 @@ const CreatorGuest: React.FC<CreatorGuestProps> = ({
             />
 
             <View m="5">
-                <Button
+                <ButtonCreation onPress={handlerSubmit} />
+                {/* <Button
                     rounded="full"
                     size="lg"
                     colorScheme="black"
@@ -222,7 +228,7 @@ const CreatorGuest: React.FC<CreatorGuestProps> = ({
                     onPress={handleSubmit(handlerSubmit)}
                 >
                     Enregistrer
-                </Button>
+                </Button> */}
             </View>
         </ScrollView>
     );
