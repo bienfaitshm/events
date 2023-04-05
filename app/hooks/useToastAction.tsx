@@ -18,17 +18,18 @@ type toastType = {
 
 const ToastAlert: React.FC<{
     toast: toastType;
+    status?: "success" | "error";
     id: any;
     title: string;
     message: string;
-}> = ({ toast, title, id, message }) => (
+}> = ({ toast, title, id, message, status = "error" }) => (
     <Alert
         m="3"
         maxWidth="100%"
         alignSelf="center"
         flexDirection="row"
-        status="error"
         variant="solid"
+        status={status}
     >
         <VStack space={1} flexShrink={1} w="100%">
             <HStack
@@ -81,11 +82,13 @@ export const useToastAction = () => {
         },
         toastSuccess: () => {
             toast.show({
+                duration: 10000,
                 render: ({ id }) => (
                     <ToastAlert
                         id={id}
-                        title="Errors"
                         toast={toast}
+                        status="success"
+                        title="Ajout"
                         message="l'ajout a reussi!"
                     />
                 ),
