@@ -4,6 +4,7 @@ import HomeListEvent from "../../components/HomeListEvent";
 import SuspenseQueryFetch from "../../containers/SuspenseQueryFetch";
 import { Avatar, Button, Icon, Image, View } from "native-base";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import CodeBarScanner from "../../components/CodeBarScanner";
 
 const HomeListEventWithData = () => {
     const router = useRouter();
@@ -70,7 +71,8 @@ export default function HomeScreen() {
                 }}
             />
             <SuspenseQueryFetch>
-                <HomeListEventWithData />
+                <CodeBarScanner onBarCodeScanned={console.log} />
+                {/* <HomeListEventWithData /> */}
             </SuspenseQueryFetch>
         </>
     );

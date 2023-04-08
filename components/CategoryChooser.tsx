@@ -1,6 +1,7 @@
 import React from "react";
 import { TouchableOpacity, StyleSheet } from "react-native";
 import { Box, FlatList, Heading, VStack, Text } from "native-base";
+import { keyExtractor } from "../utils/func";
 
 type Category = {
     id: string | number;
@@ -67,7 +68,7 @@ export default function CetegoryChooser({
             <FlatList
                 data={data}
                 numColumns={2}
-                keyExtractor={(_, index) => index.toString()}
+                keyExtractor={keyExtractor}
                 renderItem={({ item }) => (
                     <CategoryItem
                         name={item.name}

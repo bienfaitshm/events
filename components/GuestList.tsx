@@ -1,7 +1,7 @@
 import React from "react";
 import { FlatList } from "react-native";
 import { HStack, VStack, Text, Heading, View, Button } from "native-base";
-import { keyExtractor } from "../../utils/func";
+import { keyExtractor } from "../utils/func";
 
 type ID = string | number;
 export type OnSendInvitationType = (
