@@ -1,5 +1,5 @@
 import React from "react";
-import useAuthentication from "../hooks/useAuthentication";
+import { useAuthentication } from "../hooks/useAuthPersisteInfos";
 import useProtectedRoute from "../hooks/useProtected";
 
 const AuthenticationProvider: React.FC<{ children: React.ReactNode }> = (

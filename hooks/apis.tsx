@@ -1,10 +1,27 @@
 import { useMutation, useQuery } from "react-query";
-import { apis, EventDataPostType, GuestDataPostType } from "../services/apis";
+import {
+    apis,
+    EventDataPostType,
+    GuestDataPostType,
+    LoginControlerDataType,
+    LoginOwnerDataType,
+} from "../services/apis";
 
 type _ID = string | number;
 
 export function useLoadEvent() {
     return useQuery("loadEvent", apis.fetchEvents);
+}
+
+/**
+ * Fetch user
+ * @returns
+ */
+export function useFetchUser() {
+    return useQuery({
+        queryKey: "user",
+        queryFn: () => apis.fetchUser(),
+    });
 }
 
 /**
@@ -64,5 +81,25 @@ export function usePostGuest() {
 export function usePostEvent() {
     return useMutation({
         mutationFn: (data: EventDataPostType) => apis.postEvent(data),
+    });
+}
+
+/**
+ * Login Controler
+ * @returns
+ */
+export function useLoginControler() {
+    return useMutation({
+        mutationFn: (data: LoginControlerDataType) => apis.loginControler(data),
+    });
+}
+
+/**
+ * Login organisator
+ * @returns
+ */
+export function useLoginOrganisator() {
+    return useMutation({
+        mutationFn: (data: LoginOwnerDataType) => apis.loginOwner(data),
     });
 }

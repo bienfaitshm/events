@@ -9,7 +9,9 @@ export const CopyrightFooter = () => {
             <Text fontSize="2xs" bold color="white">
                 Youpi Global
             </Text>
-            <Text fontSize="2xs">v 0.0.1</Text>
+            <Text fontSize="2xs" color="white">
+                v 0.0.1
+            </Text>
         </VStack>
     );
 };

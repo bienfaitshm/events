@@ -80,7 +80,7 @@ export const useToastAction = () => {
                 ),
             });
         },
-        toastSuccess: () => {
+        toastSuccess: (message: string = "l'ajout a reussi!") => {
             toast.show({
                 duration: 10000,
                 placement: "top",
@@ -90,7 +90,7 @@ export const useToastAction = () => {
                         toast={toast}
                         status="success"
                         title="Ajout"
-                        message="l'ajout a reussi!"
+                        message={message}
                     />
                 ),
             });
