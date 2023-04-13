@@ -1,4 +1,3 @@
-import { useRouter } from "expo-router";
 import { useAuthentication } from "./useAuthPersisteInfos";
 import { useToastAction } from "./useToastAction";
 import { SubmitHandler } from "react-hook-form";
@@ -21,9 +20,7 @@ export function useSubmiter<DataInputType extends {}, ResultType>({
     successMessage = "Operation reussi!",
     options,
 }: SubmiterOptions<DataInputType, ResultType>): SubmitHandler<DataInputType> {
-    const authentication = useAuthentication();
     const toast = useToastAction();
-    const router = useRouter();
 
     return (data) => {
         mutate(data, {
@@ -34,9 +31,22 @@ export function useSubmiter<DataInputType extends {}, ResultType>({
             },
             onSuccess(res, variables, context) {
                 toast.toastSuccess(successMessage);
-                authentication.setToken(res);
                 options?.onSuccess?.(res, variables, context);
             },
         });
     };
+}
+
+export function useAuthSubmiter<D extends {}, R>(
+    options: SubmiterOptions<D, R>
+) {
+    const authentication = useAuthentication();
+    return useSubmiter({
+        ...options,
+        mutate: options.mutate,
+        options: {
+            onSuccess: (tokens) => authentication.setToken(tokens as any),
+            ...options.options,
+        },
+    });
 }
