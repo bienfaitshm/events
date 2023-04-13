@@ -19,7 +19,6 @@ export function useFetchUser() {
     return useQuery({
         queryKey: "user",
         queryFn: () => apis.fetchUser(auth.access),
-        enabled: false,
     });
 }
 
