@@ -1,13 +1,12 @@
 import { useRouter, Stack } from "expo-router";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm, SubmitHandler, Controller } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { Box, Text, VStack, Heading, Input, Button } from "native-base";
 import { useLoginOrganisator } from "../../hooks/apis";
 import LabelInput from "../../components/LabelInput";
 import BGimage from "../../containers/BGImage";
-import { useToastAction } from "../../hooks/useToastAction";
-import { useAuthentication } from "../../hooks/useAuthPersisteInfos";
+import { useAuthSubmiter } from "../../hooks/useSubmiter";
 
 type DataInputType = {
     username: string;
@@ -20,29 +19,15 @@ const validationSchema = Yup.object().shape({
 });
 
 export default function OrganisatorScreen() {
-    const authentication = useAuthentication();
-    const toast = useToastAction();
     const route = useRouter();
-    const mutation = useLoginOrganisator();
     const { control, handleSubmit } = useForm<DataInputType>({
         resolver: yupResolver(validationSchema),
     });
 
-    const handlerSubmit: SubmitHandler<DataInputType> = (data) => {
-        mutation.mutate(data, {
-            onError(error: any) {
-                const message = error.response
-                    ? "Verifier vos donnees"
-                    : error.message;
-                // console.log("Error", JSON.stringify(error.response, null, 4));
-                toast.toastError(message);
-            },
-            onSuccess(data) {
-                toast.toastSuccess("Connexion reussi!");
-                authentication.setToken(data);
-            },
-        });
-    };
+    const mutation = useLoginOrganisator();
+    const handlerSubmit = useAuthSubmiter({
+        mutate: mutation.mutate,
+    });
     return (
         <>
             <Stack.Screen
