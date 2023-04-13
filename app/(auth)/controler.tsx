@@ -1,26 +1,15 @@
 import * as React from "react";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm, SubmitHandler, Controller } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 
 import { Box, Input, Heading, VStack, Button } from "native-base";
 import { useRouter, Stack } from "expo-router";
-// import {
-//     CodeField,
-//     Cursor,
-//     useBlurOnFulfill,
-//     useClearByFocusCell,
-// } from "react-native-confirmation-code-field";
-
 import BGimage from "../../containers/BGImage";
 import LabelInput from "../../components/LabelInput";
 import { useLoginControler } from "../../hooks/apis";
-import { useToastAction } from "../../hooks/useToastAction";
-import { useAuthentication } from "../../hooks/useAuthPersisteInfos";
-import { useSubmiter } from "../../hooks/useSubmiter";
 import { LoginControlerDataType } from "../../services/apis";
-
-const CELL_COUNT = 5;
+import { useAuthSubmiter } from "../../hooks/useSubmiter";
 
 type DataInputType = {
     access_code: string;
@@ -37,14 +26,7 @@ export default function ControlerScreen() {
         resolver: yupResolver(validationSchema),
     });
 
-    // const value = watch("access_code");
-    // const ref = useBlurOnFulfill({ value, cellCount: CELL_COUNT });
-    // const [props, getCellOnLayoutHandler] = useClearByFocusCell({
-    //     value,
-    //     setValue: (code) => setValue("access_code", code),
-    // });
-
-    const onSubmit = useSubmiter<LoginControlerDataType, any>({
+    const onSubmit = useAuthSubmiter<LoginControlerDataType, any>({
         mutate: mutation.mutate,
     });
 
@@ -93,38 +75,6 @@ export default function ControlerScreen() {
                                         value={value}
                                         onChangeText={onChange}
                                     />
-                                    {/* <CodeField
-                                        ref={ref}
-                                        {...props}
-                                        rootStyle={styles.codeFieldRoot}
-                                        // Use `caretHidden={false}` when users can't paste a text value, because context menu doesn't appear
-
-                                        cellCount={CELL_COUNT}
-                                        keyboardType="number-pad"
-                                        textContentType="oneTimeCode"
-                                        renderCell={({
-                                            index,
-                                            symbol,
-                                            isFocused,
-                                        }) => (
-                                            <Text
-                                                key={index}
-                                                style={[
-                                                    styles.cell,
-                                                    isFocused &&
-                                                        styles.focusCell,
-                                                ]}
-                                                onLayout={getCellOnLayoutHandler(
-                                                    index
-                                                )}
-                                            >
-                                                {symbol ||
-                                                    (isFocused ? (
-                                                        <Cursor />
-                                                    ) : null)}
-                                            </Text>
-                                        )}
-                                    /> */}
                                 </LabelInput>
                             )}
                         />
@@ -145,9 +95,6 @@ export default function ControlerScreen() {
                             >
                                 Connexion
                             </Button>
-                            {/* <Box alignItems="flex-end">
-                            <Text color="white">Pas encore de compte ?</Text>
-                        </Box> */}
                         </VStack>
                         <Button
                             rounded="full"
@@ -168,22 +115,3 @@ export default function ControlerScreen() {
         </>
     );
 }
-
-// const styles = StyleSheet.create({
-//     root: { flex: 1, padding: 20 },
-//     title: { textAlign: "center", fontSize: 30 },
-//     codeFieldRoot: { marginTop: 20 },
-//     cell: {
-//         width: 50,
-//         height: 60,
-//         lineHeight: 58,
-//         fontSize: 26,
-//         borderWidth: 2,
-//         borderColor: "#e3d4ff",
-//         textAlign: "center",
-//         borderRadius: 10,
-//     },
-//     focusCell: {
-//         borderColor: "#fff",
-//     },
-// });
