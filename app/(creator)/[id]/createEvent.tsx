@@ -4,11 +4,15 @@ import CreatorEvent, { DataInputType } from "../../../components/CreatorEvent";
 import { useParamsID } from "./creatorUtils";
 import { usePostEvent } from "../../../hooks/apis";
 import { useToastAction } from "../../../hooks/useToastAction";
+import { useSubmiter } from "../../../hooks/useSubmiter";
 
 const usePostAction = (category: string | number) => {
     const router = useRouter();
     const toast = useToastAction();
     const mutation = usePostEvent();
+    const submiter = useSubmiter<DataInputType, any>({
+        mutate: (values) => mutation.mutate({ category, ...values }),
+    });
     return (value: DataInputType, callback?: (state: boolean) => void) => {
         mutation.mutate(
             {

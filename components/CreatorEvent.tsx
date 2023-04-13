@@ -265,7 +265,7 @@ const CreatorEvents: React.FC<CreatorEventsProps<DataInputType>> = ({
                         color: "gray.800",
                     }}
                 />
-                <ButtonCreation onPress={handlerSubmit} />
+                <ButtonCreation isLoading onPress={handlerSubmit} />
             </VStack>
         </ScrollView>
     );
