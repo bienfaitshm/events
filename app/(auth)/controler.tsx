@@ -3,21 +3,22 @@ import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 
-import { StyleSheet } from "react-native";
-import { Box, Text, Input, Heading, VStack, Button } from "native-base";
+import { Box, Input, Heading, VStack, Button } from "native-base";
 import { useRouter, Stack } from "expo-router";
-import {
-    CodeField,
-    Cursor,
-    useBlurOnFulfill,
-    useClearByFocusCell,
-} from "react-native-confirmation-code-field";
+// import {
+//     CodeField,
+//     Cursor,
+//     useBlurOnFulfill,
+//     useClearByFocusCell,
+// } from "react-native-confirmation-code-field";
 
 import BGimage from "../../containers/BGImage";
 import LabelInput from "../../components/LabelInput";
 import { useLoginControler } from "../../hooks/apis";
 import { useToastAction } from "../../hooks/useToastAction";
 import { useAuthentication } from "../../hooks/useAuthPersisteInfos";
+import { useSubmiter } from "../../hooks/useSubmiter";
+import { LoginControlerDataType } from "../../services/apis";
 
 const CELL_COUNT = 5;
 
@@ -30,36 +31,22 @@ const validationSchema = Yup.object().shape({
 });
 
 export default function ControlerScreen() {
-    const authentication = useAuthentication();
-    const toast = useToastAction();
     const mutation = useLoginControler();
     const router = useRouter();
-    const { control, handleSubmit, setValue, watch } = useForm<DataInputType>({
+    const { control, handleSubmit } = useForm<DataInputType>({
         resolver: yupResolver(validationSchema),
     });
 
-    const value = watch("access_code");
-    const ref = useBlurOnFulfill({ value, cellCount: CELL_COUNT });
-    const [props, getCellOnLayoutHandler] = useClearByFocusCell({
-        value,
-        setValue: (code) => setValue("access_code", code),
-    });
+    // const value = watch("access_code");
+    // const ref = useBlurOnFulfill({ value, cellCount: CELL_COUNT });
+    // const [props, getCellOnLayoutHandler] = useClearByFocusCell({
+    //     value,
+    //     setValue: (code) => setValue("access_code", code),
+    // });
 
-    const onSubmit: SubmitHandler<DataInputType> = (data) => {
-        mutation.mutate(data, {
-            onError(error: any) {
-                const message = error.response
-                    ? "Verifier vos donnees"
-                    : error.message;
-                // console.log("Error", JSON.stringify(error.response, null, 4));
-                toast.toastError(message);
-            },
-            onSuccess(data) {
-                toast.toastSuccess("Connexion reussi!");
-                authentication.setToken(data);
-            },
-        });
-    };
+    const onSubmit = useSubmiter<LoginControlerDataType, any>({
+        mutate: mutation.mutate,
+    });
 
     return (
         <>
@@ -98,17 +85,20 @@ export default function ControlerScreen() {
                                 fieldState: { error },
                             }) => (
                                 <LabelInput
-                                    label=""
+                                    label="Code de l'evenement"
                                     errorMessage={error?.message}
                                     isInvalid={Boolean(error)}
                                 >
-                                    <CodeField
+                                    <Input
+                                        value={value}
+                                        onChangeText={onChange}
+                                    />
+                                    {/* <CodeField
                                         ref={ref}
                                         {...props}
                                         rootStyle={styles.codeFieldRoot}
                                         // Use `caretHidden={false}` when users can't paste a text value, because context menu doesn't appear
-                                        value={value}
-                                        onChangeText={onChange}
+
                                         cellCount={CELL_COUNT}
                                         keyboardType="number-pad"
                                         textContentType="oneTimeCode"
@@ -134,7 +124,7 @@ export default function ControlerScreen() {
                                                     ) : null)}
                                             </Text>
                                         )}
-                                    />
+                                    /> */}
                                 </LabelInput>
                             )}
                         />
@@ -179,21 +169,21 @@ export default function ControlerScreen() {
     );
 }
 
-const styles = StyleSheet.create({
-    root: { flex: 1, padding: 20 },
-    title: { textAlign: "center", fontSize: 30 },
-    codeFieldRoot: { marginTop: 20 },
-    cell: {
-        width: 50,
-        height: 60,
-        lineHeight: 58,
-        fontSize: 26,
-        borderWidth: 2,
-        borderColor: "#e3d4ff",
-        textAlign: "center",
-        borderRadius: 10,
-    },
-    focusCell: {
-        borderColor: "#fff",
-    },
-});
+// const styles = StyleSheet.create({
+//     root: { flex: 1, padding: 20 },
+//     title: { textAlign: "center", fontSize: 30 },
+//     codeFieldRoot: { marginTop: 20 },
+//     cell: {
+//         width: 50,
+//         height: 60,
+//         lineHeight: 58,
+//         fontSize: 26,
+//         borderWidth: 2,
+//         borderColor: "#e3d4ff",
+//         textAlign: "center",
+//         borderRadius: 10,
+//     },
+//     focusCell: {
+//         borderColor: "#fff",
+//     },
+// });

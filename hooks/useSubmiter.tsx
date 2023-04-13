@@ -1,0 +1,42 @@
+import { useRouter } from "expo-router";
+import { useAuthentication } from "./useAuthPersisteInfos";
+import { useToastAction } from "./useToastAction";
+import { SubmitHandler } from "react-hook-form";
+import { MutateOptions } from "react-query";
+
+type MutationOption<D, P> = MutateOptions<D, unknown, P, unknown>;
+type SubmiterOptions<DataInputType, ResultType> = {
+    mutate: (
+        variables: DataInputType,
+        options?: MutationOption<DataInputType, ResultType>
+    ) => void;
+    options?: MutationOption<DataInputType, ResultType>;
+    successMessage?: string;
+    errorMessage?: string;
+};
+
+export function useSubmiter<DataInputType extends {}, ResultType>({
+    mutate,
+    errorMessage = "Verifier vos donnees",
+    successMessage = "Operation reussi!",
+    options,
+}: SubmiterOptions<DataInputType, ResultType>): SubmitHandler<DataInputType> {
+    const authentication = useAuthentication();
+    const toast = useToastAction();
+    const router = useRouter();
+
+    return (data) => {
+        mutate(data, {
+            onError(error: any, variables: ResultType, context: unknown) {
+                const message = error.response ? errorMessage : error.message;
+                toast.toastError(message);
+                options?.onError?.(error, variables, context);
+            },
+            onSuccess(res, variables, context) {
+                toast.toastSuccess(successMessage);
+                authentication.setToken(res);
+                options?.onSuccess?.(res, variables, context);
+            },
+        });
+    };
+}
