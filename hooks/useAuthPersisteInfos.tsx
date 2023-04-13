@@ -4,8 +4,8 @@ import { persist, createJSONStorage } from "zustand/middleware";
 
 type State = {
     isAuthenticated: boolean;
-    access: string | null;
-    refresh: string | null;
+    access?: string;
+    refresh?: string;
     id: string | number | null;
     username: string | null;
     firstname: string | null;
@@ -32,8 +32,8 @@ export const useAuthentication = create<State & Actions>(
     persist(
         (set) => ({
             isAuthenticated: false,
-            access: null,
-            refresh: null,
+            access: undefined,
+            refresh: undefined,
             status: null,
             setToken(value) {
                 set(() => ({

@@ -1,10 +1,32 @@
+import React from "react";
 import { useRouter, Stack } from "expo-router";
-import { useFetchTitleEvent } from "../../hooks/apis";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { Avatar, Button, Icon, Image, View } from "native-base";
 import HomeListEvent from "../../components/HomeListEvent";
 import SuspenseQueryFetch from "../../containers/SuspenseQueryFetch";
-import { Avatar, Button, Icon, Image, View } from "native-base";
-import Ionicons from "@expo/vector-icons/Ionicons";
+import { useFetchTitleEvent, useFetchUser } from "../../hooks/apis";
 import CodeBarScanner from "../../components/CodeBarScanner";
+import { useAuthentication } from "../../hooks/useAuthPersisteInfos";
+import { apis } from "../../services/apis";
+
+const useFecthAuthUser = () => {
+    const auth = useAuthentication();
+    const { data, refetch } = useFetchUser();
+    React.useEffect(() => {
+        if (auth.isAuthenticated && auth.access) {
+            apis.setToken(auth.access);
+            refetch();
+        }
+    }, [auth.isAuthenticated, auth.access]);
+
+    React.useCallback(() => {
+        if (data) {
+            auth.setUser(data);
+        }
+    }, [data]);
+
+    return data;
+};
 
 const HomeListEventWithData = () => {
     const router = useRouter();
@@ -26,6 +48,18 @@ const HomeListEventWithData = () => {
             </View>
         </>
     );
+};
+
+const HomeControlerOrganisator: React.FC = () => {
+    const data = useFecthAuthUser();
+    if (data?.status === "OW") {
+        return <HomeListEventWithData />;
+    }
+
+    if (data?.status === "AC") {
+        return <CodeBarScanner onBarCodeScanned={console.log} />;
+    }
+    return null;
 };
 
 export default function HomeScreen() {
@@ -71,8 +105,7 @@ export default function HomeScreen() {
                 }}
             />
             <SuspenseQueryFetch>
-                <CodeBarScanner onBarCodeScanned={console.log} />
-                {/* <HomeListEventWithData /> */}
+                <HomeControlerOrganisator />
             </SuspenseQueryFetch>
         </>
     );

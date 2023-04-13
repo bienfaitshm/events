@@ -2,6 +2,7 @@ import axios, { AxiosInstance, AxiosResponse, AxiosError } from "axios";
 
 // const URLNAME = "http://127.0.0.1:8000";
 const URLNAME = "http://192.168.43.72:8000";
+const TOKEN_HEADER = "Bearer";
 
 const axiosInstance = axios.create({
     baseURL: URLNAME,
@@ -125,123 +126,129 @@ export class ApisDefinition {
         return request.then((res) => res.data);
     };
 
+    authorization = (token?: string) => {
+        return {
+            headers: {
+                Authorization: `${TOKEN_HEADER} ${token}`,
+            },
+        };
+    };
+
+    get = <T>(url: string, key?: string) =>
+        this.getDataResponce<T, any>(
+            this.apis.get(url, this.authorization(key))
+        );
+
+    post = <T, D>(url: string, data: D, key?: string) =>
+        this.getDataResponce<T, any>(
+            this.apis.post(url, data, this.authorization(key))
+        );
+
     /**
      * Login Controler
      * @param data
      * @returns
      */
-    loginControler = (data: LoginControlerDataType) =>
-        this.getDataResponce<TokenAccessType, any>(
-            this.apis.post("api/auth/login_controler/", data)
-        );
+    loginControler = <D = TokenAccessType, P = LoginControlerDataType>(
+        data: P
+    ) => this.post<D, P>("api/auth/login_controler/", data);
     /**
      * login Owner
      * @param data
      * @returns
      */
-    loginOwner = (data: LoginOwnerDataType) =>
-        this.getDataResponce<TokenAccessType, any>(
-            this.apis.post("api/auth/login/", data)
-        );
+    loginOwner = <D = TokenAccessType, P = LoginOwnerDataType>(data: P) =>
+        this.post<D, P>("api/auth/login/", data);
 
     /**
      * Fetch infos of user
      * @returns
      */
-    fetchUser = () =>
-        this.getDataResponce<UserResponceType, any>(
-            this.apis.get("api/auth/user/")
-        );
+    fetchUser = (token?: string) =>
+        this.get<UserResponceType>("api/auth/user/", token);
 
     /**
      *
      * @param data GuestDataPostType
      * @returns
      */
-    postGuest = (data: GuestDataPostType) =>
-        this.getDataResponce<GuestTypeResponce, any>(
-            this.apis.post(`api/guest/${data.event}/`, data)
-        );
+    postGuest = (data: GuestDataPostType, token?: string) =>
+        this.post(`api/guest/${data.event}/`, data, token);
 
     /**
      * create a new event
      * @param data  EventDataPostType
      * @returns EventTypeResponce
      */
-    postEvent = (data: EventDataPostType) =>
-        this.getDataResponce<EventTypeResponce, any>(
-            this.apis.post("/api/event/", data)
-        );
+    postEvent = (data: EventDataPostType, token?: string) =>
+        this.post("/api/event/", data, token);
 
     /**
      * fecth detail event information from api
      * @param id a id of event
      * @returns EventTypeResponce
      */
-    fetchEvent = (id: _ID) =>
-        this.getDataResponce<EventTypeResponce, any>(
-            this.apis.get(`api/event/${id}/`)
-        );
+    fetchEvent = <D = EventTypeResponce>(id: _ID, token?: string) =>
+        this.get<D>(`api/event/${id}/`, token);
 
     /**
      * fetch all events
      * @returns
      */
-    fetchEvents = () =>
-        this.getDataResponce<PaginateReponce<EventTypeResponce>, any>(
-            this.apis.get("/api/event/")
-        );
+    fetchEvents = <D = PaginateReponce<EventTypeResponce>>(token?: string) =>
+        this.get<D>("/api/event/", token);
 
     /**
      * fetch all event in format titled
      * @returns
      */
-    fetchTitleEvents = () =>
-        this.getDataResponce<
-            PaginateReponce<TitleEventsType<ItemEventType<EventTypeResponce>>>,
-            any
-        >(this.apis.get("/api/event/titled/"));
+    fetchTitleEvents = <
+        D = PaginateReponce<TitleEventsType<ItemEventType<EventTypeResponce>>>
+    >(
+        token?: string
+    ) => this.get<D>("/api/event/titled/", token);
 
     /**
      * fetch events for date inputed
      * @param date the date for load events
      * @returns
      */
-    fecthDateEvents = (date: string) =>
-        this.getDataResponce<PaginateReponce<EventTypeResponce>, any>(
-            this.apis.get(`api/event/date/${date}/`)
-        );
+    fecthDateEvents = <D = PaginateReponce<EventTypeResponce>, T = string>(
+        date: T,
+        token?: string
+    ) => this.get<D>(`api/event/date/${date}/`, token);
 
     /**
      * Fetch a list of guest of event
      * @param event a id of event
      * @returns
      */
-    fetchEventGuests = (event: _ID) =>
-        this.getDataResponce<PaginateReponce<GuestTypeResponce>, any>(
-            this.apis.get(`/api/guest/${event}/`)
-        );
+    fetchEventGuests = <D = PaginateReponce<GuestTypeResponce>, P = _ID>(
+        event: P,
+        token?: string
+    ) => this.get<D>(`/api/guest/${event}/`, token);
 
     /**
      * Send invation to guest of invitation
      * @param params
      * @returns
      */
-    sendGuestInvation = (params: { event: _ID; guest: _ID }) =>
-        this.getDataResponce(
-            this.apis.post(
-                `api/guest/${params.event}/${params.guest}/send_invation/`
-            )
+    sendGuestInvation = <P extends { event: _ID; guest: _ID }, D = any>(
+        params: P,
+        token?: string
+    ) =>
+        this.post<D, P>(
+            `api/guest/${params.event}/${params.guest}/send_invation/`,
+            params,
+            token
         );
 
     /**
      * Fecth all categorie
      * @returns
      */
-    fetchCategories = () =>
-        this.getDataResponce<PaginateReponce<CategoryType>, any>(
-            this.apis.get("api/category/")
-        );
+    fetchCategories = <D = PaginateReponce<CategoryType>>(token?: string) =>
+        this.get<D>("api/category/", token);
 }
 
 export const apis = new ApisDefinition(axiosInstance);

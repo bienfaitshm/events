@@ -6,21 +6,20 @@ import {
     LoginControlerDataType,
     LoginOwnerDataType,
 } from "../services/apis";
+import { useAuthentication } from "./useAuthPersisteInfos";
 
 type _ID = string | number;
-
-export function useLoadEvent() {
-    return useQuery("loadEvent", apis.fetchEvents);
-}
 
 /**
  * Fetch user
  * @returns
  */
 export function useFetchUser() {
+    const auth = useAuthentication();
     return useQuery({
         queryKey: "user",
-        queryFn: () => apis.fetchUser(),
+        queryFn: () => apis.fetchUser(auth.access),
+        enabled: false,
     });
 }
 
@@ -30,24 +29,28 @@ export function useFetchUser() {
  * @returns
  */
 export function useFetchEvent(event: _ID) {
+    const auth = useAuthentication();
     return useQuery({
         queryKey: ["event", event],
-        queryFn: () => apis.fetchEvent(event),
+        queryFn: () => apis.fetchEvent(event, auth.access),
     });
 }
 
 export function useFetchTitleEvent() {
-    return useQuery("loadTitleEvent", apis.fetchTitleEvents);
+    const auth = useAuthentication();
+    return useQuery("loadTitleEvent", () => apis.fetchTitleEvents(auth.access));
 }
 
 export function useFetchCategories() {
-    return useQuery("loadCategories", apis.fetchCategories);
+    const auth = useAuthentication();
+    return useQuery("loadCategories", () => apis.fetchCategories(auth.access));
 }
 
 export function useFetchDateEvents(date: string) {
+    const auth = useAuthentication();
     return useQuery({
         queryKey: ["dateEvent", date],
-        queryFn: () => apis.fecthDateEvents(date),
+        queryFn: () => apis.fecthDateEvents(date, auth.access),
     });
 }
 
@@ -57,30 +60,36 @@ export function useFetchDateEvents(date: string) {
  * @returns
  */
 export function useFetchEventGuests(event: string | number) {
+    const auth = useAuthentication();
     return useQuery({
         queryKey: ["eventGuest", event],
-        queryFn: () => apis.fetchEventGuests(event),
+        queryFn: () => apis.fetchEventGuests(event, auth.access),
     });
 }
 
 // mutations
 
 export function useSendInvationGuest() {
+    const auth = useAuthentication();
     return useMutation({
         mutationFn: (data: { event: _ID; guest: _ID }) =>
-            apis.sendGuestInvation(data),
+            apis.sendGuestInvation(data, auth.access),
     });
 }
 
 export function usePostGuest() {
+    const auth = useAuthentication();
     return useMutation({
-        mutationFn: (data: GuestDataPostType) => apis.postGuest(data),
+        mutationFn: (data: GuestDataPostType) =>
+            apis.postGuest(data, auth.access),
     });
 }
 
 export function usePostEvent() {
+    const auth = useAuthentication();
     return useMutation({
-        mutationFn: (data: EventDataPostType) => apis.postEvent(data),
+        mutationFn: (data: EventDataPostType) =>
+            apis.postEvent(data, auth.access),
     });
 }
 
