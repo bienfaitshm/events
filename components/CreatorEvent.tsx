@@ -30,7 +30,7 @@ import {
 import { InterfaceViewProps } from "native-base/lib/typescript/components/basic/View/types";
 
 import LabelInput, { LabelInputProps } from "./LabelInput";
-import ButtonCreation, { CallBackType } from "./ButtonCreation";
+import ButtonCreation from "./ButtonCreation";
 
 const customParseFormat = require("dayjs/plugin/customParseFormat");
 dayjs.extend(customParseFormat);
@@ -180,13 +180,15 @@ const ControledInput: React.FC<ControledInputProps<DataInputType>> = ({
 };
 
 type CreatorEventsProps<D> = {
+    isLoading?: boolean;
     initialValue?: Partial<D>;
-    onSubmit?: (value: DataInputType, callback?: CallBackType) => void;
+    onSubmit?: (value: DataInputType) => void;
 };
 
 const CreatorEvents: React.FC<CreatorEventsProps<DataInputType>> = ({
     initialValue,
     onSubmit,
+    isLoading = false,
 }) => {
     const {
         control,
@@ -197,18 +199,11 @@ const CreatorEvents: React.FC<CreatorEventsProps<DataInputType>> = ({
         resolver: yupResolver(validationSchema),
     });
 
-    const handlerSubmit = (callback?: CallBackType) => {
-        handleSubmit((data) => {
-            callback?.(true);
-            onSubmit?.(
-                {
-                    ...data,
-                    date: getIsoFormatDateTime(data.date, "DATE"),
-                },
-                callback
-            );
-        })();
-    };
+    const handlerSubmit: SubmitHandler<DataInputType> = (data) =>
+        onSubmit?.({
+            ...data,
+            date: getIsoFormatDateTime(data.date, "DATE"),
+        });
 
     return (
         <ScrollView>
@@ -265,7 +260,10 @@ const CreatorEvents: React.FC<CreatorEventsProps<DataInputType>> = ({
                         color: "gray.800",
                     }}
                 />
-                <ButtonCreation isLoading onPress={handlerSubmit} />
+                <ButtonCreation
+                    isLoading={isLoading}
+                    onPress={handleSubmit(handlerSubmit)}
+                />
             </VStack>
         </ScrollView>
     );
