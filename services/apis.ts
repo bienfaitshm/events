@@ -6,6 +6,7 @@ const TOKEN_HEADER = "Bearer";
 
 const axiosInstance = axios.create({
     baseURL: URLNAME,
+    timeout: 3000,
 });
 
 type DateType = any;
