@@ -1,20 +1,14 @@
 import React from "react";
 import { ScrollView } from "react-native";
 import Entypo from "@expo/vector-icons/Entypo";
-import { View, Input, Heading, Radio, Icon, IInputProps } from "native-base";
-import {
-    useForm,
-    SubmitHandler,
-    Controller,
-    Control,
-    FieldErrors,
-} from "react-hook-form";
+import { View, Heading, Radio, Icon } from "native-base";
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 
-import LabelInput, { LabelInputProps } from "./LabelInput";
-import { InterfaceViewProps } from "native-base/lib/typescript/components/basic/View/types";
+import LabelInput from "./LabelInput";
 import ButtonCreation from "./ButtonCreation";
+import ControledInput from "./ControledInput";
 
 export type DataInputType = {
     firstName: string;
@@ -36,52 +30,10 @@ const validationSchema = Yup.object().shape({
     isCouple: Yup.boolean().nonNullable(),
 });
 
-type ControledInputProps<D extends {}> = Omit<LabelInputProps, "children"> & {
-    viewProps?: InterfaceViewProps;
-    control?: Control<D, any>;
-    errors?: FieldErrors<D>;
-    name: keyof D;
-    inputProps?: IInputProps;
-};
-
 type CreatorGuestProps = {
     initialValue?: Partial<DataInputType>;
     onSubmit?(e: DataInputType): void;
     isLoading?: boolean;
-};
-
-const ControledInput: React.FC<ControledInputProps<DataInputType>> = ({
-    viewProps,
-    control,
-    errors,
-    name,
-    inputProps,
-    ...props
-}) => {
-    return (
-        <View my="3" {...viewProps}>
-            <Controller
-                control={control}
-                render={({ field: { onChange, onBlur, value } }) => (
-                    <LabelInput
-                        errorMessage={errors?.[name]?.message}
-                        isInvalid={Boolean(errors?.[name])}
-                        {...props}
-                    >
-                        <Input
-                            fontSize="md"
-                            variant="underlined"
-                            onBlur={onBlur}
-                            onChangeText={onChange}
-                            value={value as string}
-                            {...inputProps}
-                        />
-                    </LabelInput>
-                )}
-                name={name}
-            />
-        </View>
-    );
 };
 
 const CreatorGuest: React.FC<CreatorGuestProps> = ({
@@ -89,11 +41,7 @@ const CreatorGuest: React.FC<CreatorGuestProps> = ({
     initialValue,
     isLoading = false,
 }) => {
-    const {
-        control,
-        handleSubmit,
-        formState: { errors },
-    } = useForm<DataInputType>({
+    const { control, handleSubmit } = useForm<DataInputType>({
         defaultValues: { isCouple: false, ...initialValue },
         resolver: yupResolver(validationSchema),
     });
@@ -110,7 +58,6 @@ const CreatorGuest: React.FC<CreatorGuestProps> = ({
                 <ControledInput
                     name="firstName"
                     control={control}
-                    errors={errors}
                     label="Premier invite"
                     labelProps={{ color: "white" }}
                     inputProps={{
@@ -121,7 +68,6 @@ const CreatorGuest: React.FC<CreatorGuestProps> = ({
                 <ControledInput
                     name="secondName"
                     control={control}
-                    errors={errors}
                     label="Deuxieme mom invite"
                     labelProps={{ color: "white" }}
                     inputProps={{
@@ -172,7 +118,6 @@ const CreatorGuest: React.FC<CreatorGuestProps> = ({
                 <ControledInput
                     name="phone"
                     control={control}
-                    errors={errors}
                     label="Telephone"
                     labelProps={{ color: "white" }}
                     inputProps={{
@@ -184,7 +129,6 @@ const CreatorGuest: React.FC<CreatorGuestProps> = ({
                 <ControledInput
                     name="email"
                     control={control}
-                    errors={errors}
                     label="Email"
                     labelProps={{ color: "white" }}
                     inputProps={{
@@ -198,7 +142,6 @@ const CreatorGuest: React.FC<CreatorGuestProps> = ({
             <ControledInput
                 name="place"
                 control={control}
-                errors={errors}
                 label="Place"
                 inputProps={{
                     placeholder: "Par ex. Genese",
