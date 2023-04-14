@@ -1,15 +1,7 @@
 import React from "react";
 import { ScrollView } from "react-native";
 import Entypo from "@expo/vector-icons/Entypo";
-import {
-    View,
-    Input,
-    Heading,
-    Button,
-    Radio,
-    Icon,
-    IInputProps,
-} from "native-base";
+import { View, Input, Heading, Radio, Icon, IInputProps } from "native-base";
 import {
     useForm,
     SubmitHandler,
@@ -22,7 +14,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 
 import LabelInput, { LabelInputProps } from "./LabelInput";
 import { InterfaceViewProps } from "native-base/lib/typescript/components/basic/View/types";
-import ButtonCreation, { CallBackType } from "./ButtonCreation";
+import ButtonCreation from "./ButtonCreation";
 
 export type DataInputType = {
     firstName: string;
@@ -31,11 +23,6 @@ export type DataInputType = {
     phone: string;
     email: string;
     place: string;
-};
-
-type CreatorGuestProps = {
-    initialValue?: Partial<DataInputType>;
-    onSubmit?(e: DataInputType, clb?: CallBackType): void;
 };
 
 const validationSchema = Yup.object().shape({
@@ -55,6 +42,12 @@ type ControledInputProps<D extends {}> = Omit<LabelInputProps, "children"> & {
     errors?: FieldErrors<D>;
     name: keyof D;
     inputProps?: IInputProps;
+};
+
+type CreatorGuestProps = {
+    initialValue?: Partial<DataInputType>;
+    onSubmit?(e: DataInputType): void;
+    isLoading?: boolean;
 };
 
 const ControledInput: React.FC<ControledInputProps<DataInputType>> = ({
@@ -94,6 +87,7 @@ const ControledInput: React.FC<ControledInputProps<DataInputType>> = ({
 const CreatorGuest: React.FC<CreatorGuestProps> = ({
     onSubmit,
     initialValue,
+    isLoading = false,
 }) => {
     const {
         control,
@@ -104,12 +98,8 @@ const CreatorGuest: React.FC<CreatorGuestProps> = ({
         resolver: yupResolver(validationSchema),
     });
 
-    const handlerSubmit = (callback?: CallBackType) => {
-        handleSubmit((data) => {
-            callback?.(true);
-            onSubmit?.(data, callback);
-        })();
-    };
+    const handlerSubmit: SubmitHandler<DataInputType> = (data) =>
+        onSubmit?.(data);
 
     return (
         <ScrollView>
@@ -219,16 +209,10 @@ const CreatorGuest: React.FC<CreatorGuestProps> = ({
             />
 
             <View m="5">
-                <ButtonCreation onPress={handlerSubmit} />
-                {/* <Button
-                    rounded="full"
-                    size="lg"
-                    colorScheme="black"
-                    bgColor="black"
+                <ButtonCreation
+                    isLoading={isLoading}
                     onPress={handleSubmit(handlerSubmit)}
-                >
-                    Enregistrer
-                </Button> */}
+                />
             </View>
         </ScrollView>
     );

@@ -3,15 +3,15 @@ import { Stack, useRouter } from "expo-router";
 import { useParamsID } from "./creatorUtils";
 import CreatorGuest, { DataInputType } from "../../../components/CreatorGuest";
 import { usePostGuest } from "../../../hooks/apis";
-import { useToastAction } from "../../../hooks/useToastAction";
+import { useSubmiter } from "../../../hooks/useSubmiter";
 
-const usePostAction = (event: string | number) => {
+export default function CreateGuestPage() {
+    const event = useParamsID();
     const router = useRouter();
     const mutation = usePostGuest();
-    const toast = useToastAction();
-    return (value: DataInputType, callback: (state: boolean) => void) => {
-        mutation.mutate(
-            {
+    const onSubmit = useSubmiter<DataInputType, any>({
+        mutate: (value) =>
+            mutation.mutate({
                 first_name: value.firstName,
                 second_name: value.firstName,
                 is_couple: value.isCouple || false,
@@ -19,25 +19,11 @@ const usePostAction = (event: string | number) => {
                 phone: value.place,
                 place: value.place,
                 event,
-            },
-            {
-                onError(error) {
-                    callback?.(false);
-                    toast.toastError(JSON.stringify(error, null, 4));
-                },
-                onSuccess() {
-                    callback?.(false);
-                    toast.toastSuccess();
-                    router.back();
-                },
-            }
-        );
-    };
-};
-
-export default function CreateGuestPage() {
-    const event = useParamsID();
-    const handlerSubmit = usePostAction(event);
+            }),
+        options: {
+            onSuccess: router.back,
+        },
+    });
     return (
         <>
             <Stack.Screen
@@ -52,7 +38,7 @@ export default function CreateGuestPage() {
                     },
                 }}
             />
-            <CreatorGuest onSubmit={handlerSubmit} />
+            <CreatorGuest isLoading={mutation.isLoading} onSubmit={onSubmit} />
         </>
     );
 }
