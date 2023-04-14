@@ -13,24 +13,15 @@ import {
     Input,
     HStack,
     ScrollView,
-    Button,
     IInputProps,
-    View,
     Pressable,
     Icon,
 } from "native-base";
 
-import {
-    useForm,
-    SubmitHandler,
-    Controller,
-    FieldErrors,
-    Control,
-} from "react-hook-form";
-import { InterfaceViewProps } from "native-base/lib/typescript/components/basic/View/types";
+import { useForm, SubmitHandler } from "react-hook-form";
 
-import LabelInput, { LabelInputProps } from "./LabelInput";
 import ButtonCreation from "./ButtonCreation";
+import ControledInput from "./ControledInput";
 
 const customParseFormat = require("dayjs/plugin/customParseFormat");
 dayjs.extend(customParseFormat);
@@ -130,55 +121,6 @@ const DateTimeInput: React.FC<DateTimeInputProps> = ({
     );
 };
 
-type ControledInputProps<
-    D extends {},
-    P = IInputProps | DateTimeInputProps
-> = Omit<LabelInputProps, "children"> & {
-    viewProps?: InterfaceViewProps;
-    control?: Control<D, any>;
-    errors?: FieldErrors<D>;
-    name: keyof D;
-    inputProps?: P;
-    Children?: React.FC<P>;
-};
-
-const ControledInput: React.FC<ControledInputProps<DataInputType>> = ({
-    viewProps,
-    control,
-    errors,
-    name,
-    inputProps,
-    Children = Input,
-    ...props
-}) => {
-    return (
-        <View my="3" flex={1} {...viewProps}>
-            <Controller
-                control={control}
-                render={({ field: { onChange, onBlur, value } }) => (
-                    <LabelInput
-                        errorMessage={errors?.[name]?.message}
-                        isInvalid={Boolean(errors?.[name])}
-                        {...props}
-                    >
-                        <Children
-                            fontSize="md"
-                            variant="underlined"
-                            placeholderTextColor="white"
-                            color="white"
-                            onBlur={onBlur}
-                            onChangeText={onChange}
-                            value={value as string}
-                            {...inputProps}
-                        />
-                    </LabelInput>
-                )}
-                name={name}
-            />
-        </View>
-    );
-};
-
 type CreatorEventsProps<D> = {
     isLoading?: boolean;
     initialValue?: Partial<D>;
@@ -212,7 +154,6 @@ const CreatorEvents: React.FC<CreatorEventsProps<DataInputType>> = ({
                     <ControledInput
                         label="Nom Event"
                         name="name"
-                        errors={errors}
                         control={control}
                         labelProps={{ color: "white" }}
                         inputProps={{
@@ -224,7 +165,6 @@ const CreatorEvents: React.FC<CreatorEventsProps<DataInputType>> = ({
                         label="Date"
                         name="date"
                         control={control}
-                        errors={errors}
                         Children={DateTimeInput}
                         inputProps={{ mode: "date" }}
                     />
@@ -233,7 +173,6 @@ const CreatorEvents: React.FC<CreatorEventsProps<DataInputType>> = ({
                             label="Debut"
                             name="start"
                             control={control}
-                            errors={errors}
                             Children={DateTimeInput}
                             inputProps={{ flex: 1, w: "full" }}
                         />
@@ -241,7 +180,6 @@ const CreatorEvents: React.FC<CreatorEventsProps<DataInputType>> = ({
                             label="Fin"
                             name="end"
                             control={control}
-                            errors={errors}
                             Children={DateTimeInput}
                             inputProps={{ flex: 1 }}
                         />
@@ -252,7 +190,6 @@ const CreatorEvents: React.FC<CreatorEventsProps<DataInputType>> = ({
                 <ControledInput
                     label="Description"
                     name="description"
-                    errors={errors}
                     control={control}
                     labelProps={{ color: "white" }}
                     inputProps={{
