@@ -6,6 +6,18 @@ import HomeListEvent from "../../components/HomeListEvent";
 import SuspenseQueryFetch from "../../containers/SuspenseQueryFetch";
 import { useFetchTitleEvent, useFetchUser } from "../../hooks/apis";
 import CodeBarScanner from "../../components/CodeBarScanner";
+import { useAuthentication } from "../../hooks/useAuthPersisteInfos";
+
+const useFetshInfosUser = () => {
+    const auth = useAuthentication();
+    const { data } = useFetchUser();
+    React.useEffect(() => {
+        if (data) {
+            auth.setUser(data);
+        }
+    }, [data]);
+    return auth;
+};
 
 const HomeListEventWithData = () => {
     const router = useRouter();
@@ -30,12 +42,12 @@ const HomeListEventWithData = () => {
 };
 
 const HomeControlerOrganisator: React.FC = () => {
-    const { data, error } = useFetchUser();
-    if (data?.status === "OW") {
+    const auth = useFetshInfosUser();
+    if (auth?.status === "OW") {
         return <HomeListEventWithData />;
     }
 
-    if (data?.status === "AC") {
+    if (auth?.status === "CO") {
         return <CodeBarScanner onBarCodeScanned={console.log} />;
     }
     return <></>;
