@@ -135,10 +135,11 @@ export class ApisDefinition {
         };
     };
 
-    get = <T>(url: string, key?: string) =>
-        this.getDataResponce<T, any>(
+    get = <T>(url: string, key?: string) => {
+        return this.getDataResponce<T, any>(
             this.apis.get(url, this.authorization(key))
         );
+    };
 
     post = <T, D>(url: string, data: D, key?: string) =>
         this.getDataResponce<T, any>(
