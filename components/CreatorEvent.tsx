@@ -175,6 +175,7 @@ const CreatorEvents: React.FC<CreatorEventsProps<DataInputType>> = ({
                             control={control}
                             Children={DateTimeInput}
                             inputProps={{ flex: 1, w: "full" }}
+                            viewProps={{ flex: 1 }}
                         />
                         <ControledInput
                             label="Fin"
@@ -182,6 +183,7 @@ const CreatorEvents: React.FC<CreatorEventsProps<DataInputType>> = ({
                             control={control}
                             Children={DateTimeInput}
                             inputProps={{ flex: 1 }}
+                            viewProps={{ flex: 1 }}
                         />
                     </HStack>
                 </VStack>

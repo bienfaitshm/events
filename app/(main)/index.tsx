@@ -31,15 +31,13 @@ const HomeListEventWithData = () => {
 
 const HomeControlerOrganisator: React.FC = () => {
     const { data, error } = useFetchUser();
-    console.log("HomeControlerOrganisator");
-    console.log(JSON.stringify(error, null, 4));
-    // if (data?.status === "OW") {
-    //     return <HomeListEventWithData />;
-    // }
+    if (data?.status === "OW") {
+        return <HomeListEventWithData />;
+    }
 
-    // if (data?.status === "AC") {
-    //     return <CodeBarScanner onBarCodeScanned={console.log} />;
-    // }
+    if (data?.status === "AC") {
+        return <CodeBarScanner onBarCodeScanned={console.log} />;
+    }
     return <></>;
 };
 
