@@ -65,7 +65,11 @@ export default function OrganisatorScreen() {
                             }) => (
                                 <LabelInput
                                     label="Nom d'utilsateur"
-                                    labelProps={{ color: "blue.400" }}
+                                    labelProps={{
+                                        _text: {
+                                            color: "white",
+                                        },
+                                    }}
                                     errorMessage={error?.message}
                                     isInvalid={Boolean(error)}
                                 >
@@ -76,6 +80,7 @@ export default function OrganisatorScreen() {
                                         size="lg"
                                         variant="underlined"
                                         placeholder="Identifiant"
+                                        color="white"
                                     />
                                 </LabelInput>
                             )}
@@ -89,7 +94,11 @@ export default function OrganisatorScreen() {
                             }) => (
                                 <LabelInput
                                     label="Code d'acces"
-                                    labelProps={{ color: "white" }}
+                                    labelProps={{
+                                        _text: {
+                                            color: "white",
+                                        },
+                                    }}
                                     errorMessage={error?.message}
                                     isInvalid={Boolean(error)}
                                 >
@@ -100,6 +109,7 @@ export default function OrganisatorScreen() {
                                         size="lg"
                                         variant="underlined"
                                         placeholder="code..."
+                                        color="white"
                                     />
                                 </LabelInput>
                             )}

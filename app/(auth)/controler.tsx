@@ -10,6 +10,7 @@ import LabelInput from "../../components/LabelInput";
 import { useLoginControler } from "../../hooks/apis";
 import { LoginControlerDataType } from "../../services/apis";
 import { useAuthSubmiter } from "../../hooks/useSubmiter";
+import ControledInput from "../../components/ControledInput";
 
 type DataInputType = {
     access_code: string;
@@ -58,27 +59,19 @@ export default function ControlerScreen() {
                             A L'Event
                         </Heading>
                     </VStack>
-                    <Box my="10">
-                        <Controller
-                            name="access_code"
-                            control={control}
-                            render={({
-                                field: { onChange, value },
-                                fieldState: { error },
-                            }) => (
-                                <LabelInput
-                                    label="Code de l'evenement"
-                                    errorMessage={error?.message}
-                                    isInvalid={Boolean(error)}
-                                >
-                                    <Input
-                                        value={value}
-                                        onChangeText={onChange}
-                                    />
-                                </LabelInput>
-                            )}
-                        />
-                    </Box>
+                    <ControledInput
+                        label="Code de l'evenement"
+                        control={control}
+                        name="access_code"
+                        viewProps={{
+                            my: "10",
+                        }}
+                        labelProps={{
+                            _text: {
+                                color: "white",
+                            },
+                        }}
+                    />
                     <VStack space="10">
                         <VStack space="3">
                             <Button

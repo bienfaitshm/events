@@ -57,6 +57,7 @@ export const useAuthentication = create<State & Actions>(
         {
             name: "@AuthEvent",
             storage: createJSONStorage(() => AsyncStorage),
+            version: 1,
         }
     )
 );

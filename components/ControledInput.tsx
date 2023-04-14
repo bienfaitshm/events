@@ -23,7 +23,7 @@ export default function ControledInput<D extends {}, P extends IInputProps>({
     ...props
 }: ControledInputProps<D, P>) {
     return (
-        <View my="3" flex={1} {...viewProps}>
+        <View {...viewProps}>
             <Controller
                 control={control}
                 render={({
@@ -39,6 +39,8 @@ export default function ControledInput<D extends {}, P extends IInputProps>({
                             fontSize="md"
                             variant="underlined"
                             placeholderTextColor="white"
+                            cursorColor="white"
+                            colorScheme="white"
                             color="white"
                             onBlur={onBlur}
                             onChangeText={onChange}
