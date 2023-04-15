@@ -10,7 +10,8 @@ export default function CreateEventProps() {
     const router = useRouter();
     const mutation = usePostEvent();
     const submiter = useSubmiter<DataInputType, any>({
-        mutate: (values) => mutation.mutate({ category, ...values }),
+        mutate: (values, options) =>
+            mutation.mutate({ category, ...values }, options as any),
         options: {
             onSuccess: router.back,
         },
