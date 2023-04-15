@@ -16,6 +16,7 @@ type State = {
 };
 
 type Actions = {
+    disconnect(): void;
     setToken(value: { access: string; refresh: string }): void;
     setUser(value: {
         id: string | number;
@@ -51,6 +52,13 @@ export const useAuthentication = create<State & Actions>(
                     phone: value.phone,
                     email: value.email,
                     status: value.status,
+                }));
+            },
+            disconnect() {
+                set(() => ({
+                    access: undefined,
+                    refresh: undefined,
+                    isAuthenticated: false,
                 }));
             },
         }),
