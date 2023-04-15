@@ -21,7 +21,7 @@ type GuestType = {
     event: ID;
 };
 
-type GuestListProps = {
+export type GuestListProps = {
     guests: GuestType[];
     ListHeaderComponent?: React.ReactNode;
     onSendInvation?: OnSendInvitationType;
