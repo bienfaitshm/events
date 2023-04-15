@@ -7,6 +7,7 @@ export default function ProfilePage() {
     return (
         <View>
             <Profile
+                onDisconnect={auth.disconnect}
                 username={auth.username || undefined}
                 name={`${auth.firstname} ${auth.lastname}`}
             />
