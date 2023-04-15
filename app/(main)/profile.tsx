@@ -1,4 +1,4 @@
-import { View, Text } from "native-base";
+import { View } from "native-base";
 import { useAuthentication } from "../../hooks/useAuthPersisteInfos";
 import Profile from "../../components/Profile";
 

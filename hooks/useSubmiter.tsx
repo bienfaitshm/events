@@ -27,13 +27,16 @@ export function useSubmiter<D extends {}, R extends {}>({
     const toast = useToastAction();
 
     return (data) => {
+        console.log("Submit", data);
         mutate(data, {
             onError(error: any, variables, context) {
                 const message = error?.response ? errorMessage : error?.message;
                 toast.toastError(message);
                 options?.onError?.(error, variables, context);
+                console.log("Error", error);
             },
             onSuccess(res, variables, context) {
+                console.log("Success", res);
                 toast.toastSuccess(successMessage);
                 options?.onSuccess?.(res, variables, context);
             },

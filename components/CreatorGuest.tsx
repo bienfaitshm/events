@@ -145,6 +145,8 @@ const CreatorGuest: React.FC<CreatorGuestProps> = ({
                 label="Place"
                 inputProps={{
                     placeholder: "Par ex. Genese",
+                    color: "black",
+                    cursorColor: "black",
                 }}
                 viewProps={{
                     mx: "3",

@@ -10,16 +10,19 @@ export default function CreateGuestPage() {
     const router = useRouter();
     const mutation = usePostGuest();
     const onSubmit = useSubmiter<DataInputType, any>({
-        mutate: (value) =>
-            mutation.mutate({
-                first_name: value.firstName,
-                second_name: value.firstName,
-                is_couple: value.isCouple || false,
-                email: value.email,
-                phone: value.place,
-                place: value.place,
-                event,
-            }),
+        mutate: (value, options) =>
+            mutation.mutate(
+                {
+                    first_name: value.firstName,
+                    second_name: value.firstName,
+                    is_couple: value.isCouple || false,
+                    email: value.email,
+                    phone: value.place,
+                    place: value.place,
+                    event,
+                },
+                options as any
+            ),
         options: {
             onSuccess: router.back,
         },
