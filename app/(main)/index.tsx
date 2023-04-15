@@ -7,6 +7,7 @@ import SuspenseQueryFetch from "../../containers/SuspenseQueryFetch";
 import { useFetchTitleEvent, useFetchUser } from "../../hooks/apis";
 import CodeBarScanner from "../../components/CodeBarScanner";
 import { useAuthentication } from "../../hooks/useAuthPersisteInfos";
+import StackNavbarHome from "../../components/StackNavbarHome";
 
 const useFetshInfosUser = () => {
     const auth = useAuthentication();
@@ -56,45 +57,7 @@ const HomeControlerOrganisator: React.FC = () => {
 export default function HomeScreen() {
     return (
         <>
-            <Stack.Screen
-                options={{
-                    headerLeft(props) {
-                        return (
-                            <Avatar
-                                size="sm"
-                                bg="cyan.500"
-                                source={{
-                                    uri: "https://images.unsplash.com/photo-1603415526960-f7e0328c63b1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
-                                }}
-                            >
-                                TE
-                            </Avatar>
-                        );
-                    },
-                    headerTitle(props) {
-                        return (
-                            <View
-                                ml="24"
-                                alignItems="center"
-                                justifyContent="center"
-                            >
-                                <Image
-                                    ml="4"
-                                    height="6"
-                                    width="5"
-                                    alt="event"
-                                    _alt={{
-                                        fontWeight: "bold",
-                                        fontSize: "xl",
-                                        textTransform: "capitalize",
-                                    }}
-                                    source={require("../assets/logo_black.png")}
-                                />
-                            </View>
-                        );
-                    },
-                }}
-            />
+            <StackNavbarHome />
             <SuspenseQueryFetch>
                 <HomeControlerOrganisator />
             </SuspenseQueryFetch>
