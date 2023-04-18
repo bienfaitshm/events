@@ -27,7 +27,7 @@ export function useFetchUser() {
  * @param url
  * @returns
  */
-export function scanQrCode(url: string) {
+export function useScanQrCode(url: string) {
     const auth = useAuthentication();
     return useQuery({
         queryKey: url,

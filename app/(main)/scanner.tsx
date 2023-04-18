@@ -3,17 +3,32 @@ import { View, Heading, VStack, Text } from "native-base";
 import CodeBarScanner, {
     BarCodeScannedCallback,
 } from "../../components/CodeBarScanner";
+import SuspenseQueryFetch from "../../containers/SuspenseQueryFetch";
+import { useScanQrCode } from "../../hooks/apis";
+
+type InfoUserScanned = {
+    url: string;
+};
+
+const InfoUserScanned: React.FC<InfoUserScanned> = ({ url }) => {
+    const { data } = useScanQrCode(url);
+    return (
+        <View>
+            <Text>{JSON.stringify(data, null, 4)}</Text>
+        </View>
+    );
+};
 
 export default function ScannerPage() {
-    const [data, setData] = React.useState<undefined | string>(undefined);
+    const [url, setUrl] = React.useState<undefined | string>(undefined);
 
     const handlerScanAgain = React.useCallback(() => {
-        setData(undefined);
+        setUrl(undefined);
     }, []);
 
     const handlerScan: BarCodeScannedCallback = React.useCallback(
         ({ data }) => {
-            setData(data);
+            setUrl(data);
         },
         []
     );
@@ -37,7 +52,9 @@ export default function ScannerPage() {
                     />
                 </View>
             </View>
-            <View>{data && <Text>{data}</Text>}</View>
+            <SuspenseQueryFetch>
+                <View>{url && <InfoUserScanned url={url} />}</View>
+            </SuspenseQueryFetch>
         </View>
     );
 }

@@ -51,10 +51,14 @@ const CodeBarScanner: React.FC<CodeBarScannerProps> = ({
 
     return (
         <View flex={1} bg="blue.300">
-            <BarCodeScanner
-                onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-                style={StyleSheet.absoluteFillObject}
-            />
+            {!scanned && (
+                <BarCodeScanner
+                    onBarCodeScanned={
+                        scanned ? undefined : handleBarCodeScanned
+                    }
+                    style={StyleSheet.absoluteFillObject}
+                />
+            )}
             {scanned && (
                 <View
                     style={StyleSheet.absoluteFillObject}
