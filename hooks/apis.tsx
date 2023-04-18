@@ -24,6 +24,19 @@ export function useFetchUser() {
 
 /**
  *
+ * @param url
+ * @returns
+ */
+export function scanQrCode(url: string) {
+    const auth = useAuthentication();
+    return useQuery({
+        queryKey: url,
+        queryFn: () => apis.scanQrCode(url, auth.access),
+    });
+}
+
+/**
+ *
  * @param event id of event
  * @returns
  */

@@ -1,14 +1,21 @@
 import React from "react";
 import { StyleSheet } from "react-native";
-import { View, Button, Text } from "native-base";
-import { BarCodeScannedCallback, BarCodeScanner } from "expo-barcode-scanner";
+import { View, Button, Text, Icon } from "native-base";
+import {
+    BarCodeScannedCallback as ClbBarCodeScanner,
+    BarCodeScanner,
+} from "expo-barcode-scanner";
+import Feather from "@expo/vector-icons/Feather";
 
+export type BarCodeScannedCallback = ClbBarCodeScanner;
 type CodeBarScannerProps = {
     onBarCodeScanned?: BarCodeScannedCallback;
+    onScanAgain?(): void;
 };
 
 const CodeBarScanner: React.FC<CodeBarScannerProps> = ({
     onBarCodeScanned,
+    onScanAgain,
 }) => {
     const [hasPermission, setHasPermission] = React.useState<boolean>(false);
     const [scanned, setScanned] = React.useState<boolean>(false);
@@ -18,13 +25,15 @@ const CodeBarScanner: React.FC<CodeBarScannerProps> = ({
         setHasPermission(status === "granted");
     }, []);
 
+    const handlerScanAgain = React.useCallback(() => {
+        setScanned(false);
+        onScanAgain?.();
+    }, []);
+
     const handleBarCodeScanned: BarCodeScannedCallback = React.useCallback(
         (params) => {
             setScanned(true);
             onBarCodeScanned?.(params);
-            alert(
-                `Bar code with type ${params.type} and data ${params.data} has been scanned!`
-            );
         },
         []
     );
@@ -47,9 +56,20 @@ const CodeBarScanner: React.FC<CodeBarScannerProps> = ({
                 style={StyleSheet.absoluteFillObject}
             />
             {scanned && (
-                <Button onPress={() => setScanned(false)}>
-                    Tap to Scan Again
-                </Button>
+                <View
+                    style={StyleSheet.absoluteFillObject}
+                    bg="coolGray.200"
+                    alignItems="center"
+                    justifyContent="center"
+                >
+                    <Button
+                        rounded="full"
+                        leftIcon={<Icon as={Feather} name="refresh-ccw" />}
+                        onPress={handlerScanAgain}
+                    >
+                        Scanner encore
+                    </Button>
+                </View>
             )}
         </View>
     );

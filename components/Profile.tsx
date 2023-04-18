@@ -1,5 +1,6 @@
 import { View, Text, Avatar, Button, CloseIcon, Heading } from "native-base";
 import React from "react";
+import { getInitialName } from "../utils/string";
 
 export type ProfileProps = {
     name: string;
@@ -11,7 +12,7 @@ const Profile: React.FC<ProfileProps> = ({ name, username, onDisconnect }) => {
         <View p="4">
             <View justifyContent="center" alignItems="center" p="5">
                 <Avatar size="2xl" bg="black">
-                    {name}
+                    {getInitialName(name || `${username}`)}
                 </Avatar>
                 <Heading my="4">{username}</Heading>
                 <Text bold fontSize="lg">

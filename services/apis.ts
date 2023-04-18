@@ -12,6 +12,17 @@ const axiosInstance = axios.create({
 type DateType = any;
 type _ID = string | number;
 
+type TInfosUserScan = {
+    key: string;
+    is_couple: boolean;
+    first_name: string;
+    second_name: string;
+    place: string;
+    created_at: DateType;
+    pdf: string;
+    guest: _ID;
+};
+
 export type PaginateReponce<T> = {
     count: number;
     next: null | number;
@@ -244,6 +255,15 @@ export class ApisDefinition {
             params,
             token
         );
+
+    /**
+     *
+     * @param params
+     * @param token
+     * @returns
+     */
+    scanQrCode = <D = TInfosUserScan>(url: string, token?: string) =>
+        this.get<D>(`${url}`, token);
 
     /**
      * Fecth all categorie
