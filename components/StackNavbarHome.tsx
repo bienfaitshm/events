@@ -1,13 +1,13 @@
+/** @format */
+
 import { Stack, useRouter } from "expo-router";
 import { Avatar, View, Heading, Pressable } from "native-base";
 import React from "react";
-import { useAuthentication } from "../hooks/useAuthPersisteInfos";
 import { getInitialName } from "../utils/string";
 
 type StackNavbarHomeProps = {};
 
 const StackNavbarHome: React.FC<StackNavbarHomeProps> = (props) => {
-    const auth = useAuthentication();
     const navigation = useRouter();
     return (
         <View>
@@ -25,9 +25,10 @@ const StackNavbarHome: React.FC<StackNavbarHomeProps> = (props) => {
                                 }
                             >
                                 <Avatar size="sm" bg="black">
-                                    {getInitialName(
+                                    A
+                                    {/* {getInitialName(
                                         `${auth.firstname} ${auth.lastname} ${auth.username}`
-                                    )}
+                                    )} */}
                                 </Avatar>
                             </Pressable>
                         );

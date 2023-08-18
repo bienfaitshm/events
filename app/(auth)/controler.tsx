@@ -1,3 +1,5 @@
+/** @format */
+
 import * as React from "react";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -7,10 +9,9 @@ import { Box, Input, Heading, VStack, Button } from "native-base";
 import { useRouter, Stack } from "expo-router";
 import BGimage from "../../containers/BGImage";
 import LabelInput from "../../components/LabelInput";
-import { useLoginControler } from "../../hooks/apis";
-import { LoginControlerDataType } from "../../services/apis";
 import { useAuthSubmiter } from "../../hooks/useSubmiter";
 import ControledInput from "../../components/ControledInput";
+import { useLoginControler } from "../../hooks/apis/mutation";
 
 type DataInputType = {
     access_code: string;
@@ -27,7 +28,7 @@ export default function ControlerScreen() {
         resolver: yupResolver(validationSchema),
     });
 
-    const onSubmit = useAuthSubmiter<LoginControlerDataType, any>({
+    const onSubmit = useAuthSubmiter<any, any>({
         mutate: mutation.mutate,
     });
 

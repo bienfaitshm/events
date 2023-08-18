@@ -1,10 +1,12 @@
+/** @format */
+
 import { View } from "native-base";
 import { Stack } from "expo-router";
-import { useAuthentication } from "../../hooks/useAuthPersisteInfos";
 import Profile from "../../components/Profile";
+import { useStoreAuth } from "../../hooks/auth/accounts";
 
 export default function ProfilePage() {
-    const auth = useAuthentication();
+    const auth = useStoreAuth();
     return (
         <View>
             <Stack.Screen
@@ -14,10 +16,12 @@ export default function ProfilePage() {
                 }}
             />
             <Profile
-                status={auth.status === "CO" ? "CONTROLEUR" : "ORGANISATEUR"}
+                status={
+                    auth.user?.status === "CO" ? "CONTROLEUR" : "ORGANISATEUR"
+                }
                 onDisconnect={auth.disconnect}
-                username={auth.username || undefined}
-                name={`${auth.firstname} ${auth.lastname}`}
+                username={auth.user?.username || undefined}
+                name={`${auth.user?.firstname} ${auth.user?.lastname}`}
             />
         </View>
     );

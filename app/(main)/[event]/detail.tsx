@@ -1,3 +1,5 @@
+/** @format */
+
 import React from "react";
 import { ToastAndroid } from "react-native";
 import { Stack, useRouter } from "expo-router";
@@ -10,7 +12,7 @@ import {
     useFetchEvent,
     useFetchEventGuests,
     useSendInvationGuest,
-} from "../../../hooks/apis";
+} from "../../../hooks/apisd";
 import { _ID, useParamsEvent } from "./utilsEvent";
 import { Button } from "native-base";
 

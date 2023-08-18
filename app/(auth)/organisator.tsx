@@ -1,12 +1,19 @@
+/** @format */
+
 import { useRouter, Stack } from "expo-router";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm, Controller } from "react-hook-form";
 import { Box, Text, VStack, Heading, Input, Button } from "native-base";
-import { useLoginOrganisator } from "../../hooks/apis";
 import LabelInput from "../../components/LabelInput";
 import BGimage from "../../containers/BGImage";
 import { useAuthSubmiter } from "../../hooks/useSubmiter";
+import { useLoginOrganisator } from "../../hooks/apis/mutation";
+import {
+    TLoginOrganisatorData,
+    TUser,
+    TTokenAccess,
+} from "../../services/apis/types";
 
 type DataInputType = {
     username: string;
@@ -24,7 +31,13 @@ export default function OrganisatorScreen() {
         resolver: yupResolver(validationSchema),
     });
 
-    const mutation = useLoginOrganisator();
+    const mutation = useLoginOrganisator<
+        TLoginOrganisatorData,
+        TTokenAccess & {
+            user: TUser;
+        }
+    >();
+
     const handlerSubmit = useAuthSubmiter({
         mutate: mutation.mutate,
     });

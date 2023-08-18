@@ -1,10 +1,12 @@
+/** @format */
+
 import React from "react";
 import { View, Heading, VStack, Text } from "native-base";
 import CodeBarScanner, {
     BarCodeScannedCallback,
 } from "../../components/CodeBarScanner";
 import SuspenseQueryFetch from "../../containers/SuspenseQueryFetch";
-import { useScanQrCode } from "../../hooks/apis";
+import { useScanQrCode } from "../../hooks/apisd";
 
 type InfoUserScanned = {
     url: string;

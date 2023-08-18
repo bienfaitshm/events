@@ -1,8 +1,10 @@
+/** @format */
+
 import React from "react";
 import { Stack, useRouter } from "expo-router";
 import CreatorEvent, { DataInputType } from "../../../components/CreatorEvent";
 import { useParamsID } from "./creatorUtils";
-import { usePostEvent } from "../../../hooks/apis";
+import { usePostEvent } from "../../../hooks/apisd";
 import { useSubmiter } from "../../../hooks/useSubmiter";
 
 export default function CreateEventProps() {

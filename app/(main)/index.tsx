@@ -1,33 +1,22 @@
+/** @format */
+
 import React from "react";
-import { useRouter, Stack } from "expo-router";
+import { useRouter } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Avatar, Button, Icon, Image, View } from "native-base";
 import HomeListEvent from "../../components/HomeListEvent";
 import SuspenseQueryFetch from "../../containers/SuspenseQueryFetch";
-import {
-    useFetchEventGuests,
-    useFetchTitleEvent,
-    useFetchUser,
-} from "../../hooks/apis";
 import CodeBarScanner from "../../components/CodeBarScanner";
-import { useAuthentication } from "../../hooks/useAuthPersisteInfos";
 import StackNavbarHome from "../../components/StackNavbarHome";
 import ControlerGuestList from "../../components/ControlerGuestList";
+import { useStoreAuth } from "../../hooks/auth/accounts";
+import { useFetchTitleEvent } from "../../hooks/apis/fetch";
+import { TTitleEventPaginate } from "../../services/apis/types";
 
 /**
  *
  * @returns
  */
-const useFetshInfosUser = () => {
-    const auth = useAuthentication();
-    const { data } = useFetchUser();
-    React.useEffect(() => {
-        if (data) {
-            auth.setUser(data);
-        }
-    }, [data]);
-    return auth;
-};
 
 /**
  *
@@ -35,7 +24,7 @@ const useFetshInfosUser = () => {
  */
 const HomeListEventWithData = () => {
     const router = useRouter();
-    const { data } = useFetchTitleEvent();
+    const { data } = useFetchTitleEvent<TTitleEventPaginate>();
     return (
         <>
             <HomeListEvent
@@ -61,12 +50,9 @@ const HomeListEventWithData = () => {
  */
 const WDHomeControlerListGuest = () => {
     const router = useRouter();
-    const { data } = useFetchEventGuests(0);
+    // const { data } = useFetchEventGuests(0);
     return (
-        <ControlerGuestList
-            onScan={() => router.push("scanner")}
-            guests={data?.results || []}
-        />
+        <ControlerGuestList onScan={() => router.push("scanner")} guests={[]} />
     );
 };
 
@@ -75,12 +61,12 @@ const WDHomeControlerListGuest = () => {
  * @returns
  */
 const HomeControlerOrganisator: React.FC = () => {
-    const auth = useFetshInfosUser();
-    if (auth?.status === "OW") {
+    const user = useStoreAuth((state) => state.user);
+    if (user?.status === "OW") {
         return <HomeListEventWithData />;
     }
 
-    if (auth?.status === "CO") {
+    if (user?.status === "CO") {
         return <WDHomeControlerListGuest />;
     }
     return <></>;

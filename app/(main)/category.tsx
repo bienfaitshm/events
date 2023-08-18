@@ -1,16 +1,17 @@
-import { Box } from "native-base";
+/** @format */
+
 import React from "react";
 import CategoryChooser from "../../components/CategoryChooser";
 import { useRouter, Stack } from "expo-router";
-import { useFetchCategories } from "../../hooks/apis";
+import { useFetchCategories } from "../../hooks/apisd";
 import SuspenseQueryFetch from "../../containers/SuspenseQueryFetch";
 
-const DCategoryChooser = () => {
-    const navigation = useRouter();
+const FecthCategoryChooser = () => {
+    const router = useRouter();
     const { data } = useFetchCategories();
     return (
         <CategoryChooser
-            onPress={(id) => navigation.push(`(creator)/${id}/createEvent`)}
+            onPress={(id) => router.push(`(creator)/${id}/createEvent`)}
             data={data?.results.map((d) => ({
                 name: d.name,
                 bgColor: d.bg_color,
@@ -30,7 +31,7 @@ export default function CreateEvent() {
                 }}
             />
             <SuspenseQueryFetch>
-                <DCategoryChooser />
+                <FecthCategoryChooser />
             </SuspenseQueryFetch>
         </>
     );

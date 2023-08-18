@@ -28,7 +28,10 @@ export class ActionApis {
         );
     }
 
-    public loginOwner<TData, TResponse>(data: TData, config: TParams = {}) {
+    public loginOrganisator<TData, TResponse>(
+        data: TData,
+        config: TParams = {}
+    ) {
         return this.apis.post<TData, TResponse>(
             "api/auth/login/",
             data,
@@ -61,7 +64,7 @@ export class ActionApis {
      */
     public fetchEvents<T>(config: TParams = {}) {
         return this.apis.getRequestAuthenticated<T>(
-            this.getUrl("/api/event/", config),
+            this.getUrl("/api/events/", config),
             config
         );
     }
@@ -73,14 +76,14 @@ export class ActionApis {
      */
     public fetchTitleEvents<T>(config: TParams = {}) {
         return this.apis.getRequestAuthenticated<T>(
-            this.getUrl("/api/event/titled/", config),
+            this.getUrl("/api/events/titled/", config),
             config
         );
     }
 
     public fetchEventGuests<T>(config: TParams = {}) {
         return this.apis.getRequestAuthenticated<T>(
-            this.getUrl(`/api/guest/`, config),
+            this.getUrl(`/api/guests/`, config),
             config
         );
     }

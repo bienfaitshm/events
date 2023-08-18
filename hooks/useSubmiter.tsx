@@ -1,7 +1,11 @@
-import { useAuthentication } from "./useAuthPersisteInfos";
+/** @format */
+
 import { useToastAction } from "./useToastAction";
 import { SubmitHandler } from "react-hook-form";
 import { MutateOptions, UseMutateFunction } from "react-query";
+import { useStoreAuth } from "./auth/accounts";
+import { useRouter } from "expo-router";
+import { TTokenAccess, TUser } from "../services/apis/types";
 
 type MutationOption<D, P> = MutateOptions<D, unknown, P, unknown>;
 type MutionFnType<D extends {}, P extends {}> = UseMutateFunction<
@@ -47,13 +51,24 @@ export function useSubmiter<D extends {}, R extends {}>({
 export function useAuthSubmiter<D extends {}, R extends {}>(
     options: SubmiterOptions<D, R>
 ) {
-    const authentication = useAuthentication();
+    const router = useRouter();
+    const authenticate = useStoreAuth((state) => state.authenticate);
     return useSubmiter({
         ...options,
-        mutate: options.mutate,
         options: {
-            onSuccess: (tokens) => authentication.setToken(tokens as any),
-            ...options.options,
+            onSuccess(data: any, variables, context) {
+                const newData = data as TTokenAccess & {
+                    user: TUser;
+                };
+                authenticate({
+                    access: newData.access,
+                    refresh: newData.refresh,
+                    user: newData.user,
+                });
+                router.replace("/");
+                console.log("datata>>>> ", JSON.stringify(newData, null, 4));
+                // authenticate
+            },
         },
     });
 }

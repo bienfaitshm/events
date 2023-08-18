@@ -1,8 +1,10 @@
+/** @format */
+
 import React from "react";
 import { Stack, useRouter } from "expo-router";
 import { useParamsID } from "./creatorUtils";
 import CreatorGuest, { DataInputType } from "../../../components/CreatorGuest";
-import { usePostGuest } from "../../../hooks/apis";
+import { usePostGuest } from "../../../hooks/apisd";
 import { useSubmiter } from "../../../hooks/useSubmiter";
 
 export default function CreateGuestPage() {
