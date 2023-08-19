@@ -1,3 +1,5 @@
+/** @format */
+
 import React from "react";
 import { FlatList, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
@@ -41,7 +43,12 @@ const DayEventItem: React.FC<{
     const route = useRouter();
     return (
         <TouchableOpacity
-            onPress={() => route.push(`(main)/${item.id}/detail`)}
+            onPress={() =>
+                route.push({
+                    pathname: "/events/[event]",
+                    params: { event: item.id },
+                })
+            }
             style={{ flex: 1 }}
         >
             <View flex={1} p="3" rounded="xl" bgColor="gray.200">

@@ -1,3 +1,5 @@
+/** @format */
+
 import * as React from "react";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -197,6 +199,7 @@ const CreatorEvents: React.FC<CreatorEventsProps<DataInputType>> = ({
                     inputProps={{
                         placeholderTextColor: "gray.800",
                         color: "gray.800",
+                        multiline: true,
                     }}
                 />
                 <ButtonCreation

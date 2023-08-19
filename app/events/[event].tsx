@@ -3,24 +3,25 @@
 import React from "react";
 import { ToastAndroid } from "react-native";
 import { Stack, useRouter } from "expo-router";
-import SuspenseQueryFetch from "../../../containers/SuspenseQueryFetch";
+import SuspenseQueryFetch from "../../containers/SuspenseQueryFetch";
 
-import DetailEvent from "../../../components/DetailEvent";
-import GuestList, { OnSendInvitationType } from "../../../components/GuestList";
+import DetailEvent from "../../components/DetailEvent";
+import GuestList, { OnSendInvitationType } from "../../components/GuestList";
 
-import {
-    useFetchEvent,
-    useFetchEventGuests,
-    useSendInvationGuest,
-} from "../../../hooks/apisd";
-import { _ID, useParamsEvent } from "./utilsEvent";
 import { Button } from "native-base";
+import { useFetchEvents, useFetchGuests } from "../../hooks/apis/fetch";
+import { TEvent, TGuest, TPaginate } from "../../services/apis/types";
+import { useLocalSearchParams } from "../../utils/localSearchParams";
+import { useSendInvation } from "../../hooks/apis/mutation";
 
-const DDetailEvent: React.FC<{ event: _ID; nGuests: number }> = ({
+const DDetailEvent: React.FC<{ event: number | string; nGuests: number }> = ({
     event,
     nGuests,
 }) => {
-    const { data: eventData } = useFetchEvent(event);
+    const { data: eventData } = useFetchEvents<TEvent>({
+        detail: true,
+        id: event,
+    });
 
     return eventData ? (
         <DetailEvent
@@ -37,23 +38,27 @@ const DDetailEvent: React.FC<{ event: _ID; nGuests: number }> = ({
     );
 };
 
-const DGuestList: React.FC<{ event: _ID }> = ({ event }) => {
-    const mutation = useSendInvationGuest();
-    const { data } = useFetchEventGuests(event);
-    const guests = data?.results || [];
+const DGuestList: React.FC<{ event: number | string }> = ({ event }) => {
+    const mutation = useSendInvation();
+    const { data: guests } = useFetchGuests<TPaginate<TGuest>>({
+        params: {
+            event,
+        },
+    });
 
     const handlerSendInvation: OnSendInvitationType = React.useCallback(
         (guest, callback) => {
             mutation.mutate(
-                { event, guest },
+                { guest: guest },
                 {
                     onSuccess: () => callback?.(true),
-                    onError: () => {
+                    onError: (err) => {
                         ToastAndroid.show(
                             "Impossible d'envoyer une invitation",
                             ToastAndroid.LONG
                         );
                         callback?.(false);
+                        // console.log(JSON.stringify(err?.response, null, 4));
                     },
                 }
             );
@@ -65,16 +70,20 @@ const DGuestList: React.FC<{ event: _ID }> = ({ event }) => {
         <GuestList
             canSendInvation
             onSendInvation={handlerSendInvation}
-            guests={guests}
+            guests={guests?.results || []}
             ListHeaderComponent={
-                <DDetailEvent nGuests={guests.length} event={event} />
+                <DDetailEvent nGuests={guests?.count || 0} event={event} />
             }
         />
     );
 };
 
 export default function DetailEventPage() {
-    const eventkey = useParamsEvent();
+    const event = useLocalSearchParams<{ event: string | string[] }>({
+        extractFn(e) {
+            return e.event;
+        },
+    });
     const router = useRouter();
 
     return (
@@ -87,7 +96,7 @@ export default function DetailEventPage() {
                             <Button
                                 onPress={() =>
                                     router.push(
-                                        `(creator)/${eventkey}/createGuest`
+                                        `(creator)/${event}/createGuest`
                                     )
                                 }
                                 size="sm"
@@ -100,7 +109,7 @@ export default function DetailEventPage() {
                 }}
             />
             <SuspenseQueryFetch>
-                <DGuestList event={eventkey} />
+                <DGuestList event={event} />
             </SuspenseQueryFetch>
         </>
     );

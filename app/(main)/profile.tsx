@@ -21,7 +21,7 @@ export default function ProfilePage() {
                 }
                 onDisconnect={auth.disconnect}
                 username={auth.user?.username || undefined}
-                name={`${auth.user?.firstname} ${auth.user?.lastname}`}
+                name={`${auth.user?.first_name} ${auth.user?.last_name}`}
             />
         </View>
     );

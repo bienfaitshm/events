@@ -45,7 +45,7 @@ export class ActionApis {
 
     public postGuest<TData, TResponse>(data: TData, config: TParams = {}) {
         return this.apis.postRequestAuthenticated<TData, TResponse>(
-            this.getUrl(`api/guest/`, config),
+            this.getUrl(`api/guests/`, config),
             data,
             config
         );
@@ -53,7 +53,7 @@ export class ActionApis {
 
     public postEvent<TData, TResponse>(data: TData, config: TParams = {}) {
         return this.apis.postRequestAuthenticated<TData, TResponse>(
-            this.getUrl("/api/event/", config),
+            this.getUrl("/api/events/", config),
             data,
             config
         );
@@ -81,7 +81,7 @@ export class ActionApis {
         );
     }
 
-    public fetchEventGuests<T>(config: TParams = {}) {
+    public fetchGuests<T>(config: TParams = {}) {
         return this.apis.getRequestAuthenticated<T>(
             this.getUrl(`/api/guests/`, config),
             config
@@ -96,7 +96,7 @@ export class ActionApis {
         config: TParams = {}
     ) {
         return this.apis.postRequestAuthenticated<TData, TResponse>(
-            `api/guest/send_invation/`,
+            `/api/guests/send_invation/`,
             data,
             config
         );

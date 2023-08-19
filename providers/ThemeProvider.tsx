@@ -1,5 +1,22 @@
+/** @format */
+
 import React from "react";
 import { NativeBaseProvider, extendTheme } from "native-base";
+import { ThemeProvider as Thme, createTheme } from "@rneui/themed";
+
+const _theme = createTheme({
+    lightColors: {
+        // primary: "red",
+    },
+    darkColors: {
+        // primary: "blue",
+    },
+    components: {
+        Button: {
+            raised: false,
+        },
+    },
+});
 
 const ThemeProvider: React.FC<{ children: React.ReactNode }> = (props) => {
     const theme = extendTheme({
@@ -29,7 +46,11 @@ const ThemeProvider: React.FC<{ children: React.ReactNode }> = (props) => {
     });
 
     return (
-        <NativeBaseProvider theme={theme}>{props.children}</NativeBaseProvider>
+        <Thme theme={_theme}>
+            <NativeBaseProvider theme={theme}>
+                {props.children}
+            </NativeBaseProvider>
+        </Thme>
     );
 };
 

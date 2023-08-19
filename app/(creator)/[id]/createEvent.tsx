@@ -4,11 +4,16 @@ import React from "react";
 import { Stack, useRouter } from "expo-router";
 import CreatorEvent, { DataInputType } from "../../../components/CreatorEvent";
 import { useParamsID } from "./creatorUtils";
-import { usePostEvent } from "../../../hooks/apisd";
 import { useSubmiter } from "../../../hooks/useSubmiter";
+import { usePostEvent } from "../../../hooks/apis/mutation";
+import { useLocalSearchParams } from "../../../utils/localSearchParams";
 
 export default function CreateEventProps() {
-    const category = useParamsID();
+    const category = useLocalSearchParams<{ id: string | string[] }>({
+        extractFn(e) {
+            return e.id;
+        },
+    });
     const router = useRouter();
     const mutation = usePostEvent();
     const submiter = useSubmiter<DataInputType, any>({

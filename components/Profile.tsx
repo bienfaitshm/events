@@ -1,3 +1,5 @@
+/** @format */
+
 import {
     View,
     Text,
@@ -47,7 +49,7 @@ const Profile: React.FC<ProfileProps> = ({
                     bg="black"
                     leftIcon={<CloseIcon />}
                 >
-                    Connexion
+                    Deconnexion
                 </Button>
             </View>
         </View>

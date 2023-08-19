@@ -64,6 +64,7 @@ export const useStoreAuth = create(
                     user: null,
                     refresh: undefined,
                     access: undefined,
+                    isAuthenticated: false,
                 });
             },
             authenticate(value) {

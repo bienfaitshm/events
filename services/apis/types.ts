@@ -31,7 +31,7 @@ type GuestMixinType<T> = {
     event: _ID;
 } & T;
 
-export type GuestTypeResponce = GuestMixinType<{
+export type TGuest = GuestMixinType<{
     id: _ID;
     created_at: string;
     is_send: boolean;
@@ -48,7 +48,7 @@ type EventMixinType<T> = {
     category: _ID;
 } & T;
 
-export type EventTypeResponce = EventMixinType<{
+export type TEvent = EventMixinType<{
     id: _ID;
     category_name: string;
     text_color: string;
@@ -71,9 +71,7 @@ export type TTitleEvent<IE> = {
     data: IE[];
 };
 
-export type TTitleEventPaginate = TPaginate<
-    TTitleEvent<ItemEventType<EventTypeResponce>>
->;
+export type TTitleEventPaginate = TPaginate<TTitleEvent<ItemEventType<TEvent>>>;
 
 export type TCategory = {
     id: _ID;

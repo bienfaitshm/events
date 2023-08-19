@@ -3,15 +3,21 @@
 import React from "react";
 import CategoryChooser from "../../components/CategoryChooser";
 import { useRouter, Stack } from "expo-router";
-import { useFetchCategories } from "../../hooks/apisd";
 import SuspenseQueryFetch from "../../containers/SuspenseQueryFetch";
+import { useFetchCategories } from "../../hooks/apis/fetch";
+import { TCategory, TPaginate } from "../../services/apis/types";
 
 const FecthCategoryChooser = () => {
     const router = useRouter();
-    const { data } = useFetchCategories();
+    const { data } = useFetchCategories<TPaginate<TCategory>>();
     return (
         <CategoryChooser
-            onPress={(id) => router.push(`(creator)/${id}/createEvent`)}
+            onPress={(id) =>
+                router.push({
+                    pathname: "(creator)/[event]/createEvent",
+                    params: { event: id },
+                })
+            }
             data={data?.results.map((d) => ({
                 name: d.name,
                 bgColor: d.bg_color,
@@ -27,7 +33,9 @@ export default function CreateEvent() {
         <>
             <Stack.Screen
                 options={{
-                    title: "Category",
+                    title: "Categories",
+                    presentation: "modal",
+                    animation: "slide_from_bottom",
                 }}
             />
             <SuspenseQueryFetch>

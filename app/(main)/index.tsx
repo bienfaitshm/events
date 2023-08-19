@@ -10,8 +10,12 @@ import CodeBarScanner from "../../components/CodeBarScanner";
 import StackNavbarHome from "../../components/StackNavbarHome";
 import ControlerGuestList from "../../components/ControlerGuestList";
 import { useStoreAuth } from "../../hooks/auth/accounts";
-import { useFetchTitleEvent } from "../../hooks/apis/fetch";
-import { TTitleEventPaginate } from "../../services/apis/types";
+import { useFetchGuests, useFetchTitleEvent } from "../../hooks/apis/fetch";
+import {
+    TGuest,
+    TPaginate,
+    TTitleEventPaginate,
+} from "../../services/apis/types";
 
 /**
  *
@@ -29,7 +33,12 @@ const HomeListEventWithData = () => {
         <>
             <HomeListEvent
                 data={data?.results}
-                onSelectItem={(date) => router.push(`(main)/${date}/days`)}
+                onSelectItem={(date) =>
+                    router.push({
+                        pathname: "(main)/[date]",
+                        params: { date },
+                    })
+                }
             />
             <View position="absolute" bottom={3} right={3} zIndex={30}>
                 <Button
@@ -50,9 +59,12 @@ const HomeListEventWithData = () => {
  */
 const WDHomeControlerListGuest = () => {
     const router = useRouter();
-    // const { data } = useFetchEventGuests(0);
+    const { data } = useFetchGuests<TPaginate<TGuest>>();
     return (
-        <ControlerGuestList onScan={() => router.push("scanner")} guests={[]} />
+        <ControlerGuestList
+            onScan={() => router.push("scanner")}
+            guests={data?.results || []}
+        />
     );
 };
 
